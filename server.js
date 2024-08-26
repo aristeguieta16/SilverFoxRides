@@ -70,7 +70,9 @@ app.post('/create-checkout', async (req, res) => {
 });
 
 app.post('/api/webhook', (req, res) => {
-  const event = req.body;
+    console.log('Webhook route hit');
+    res.status(200).send('Webhook received');
+    const event = req.body;
 
   if (event.type === 'payment.created') {
     const paymentDetails = event.data.object.payment;
