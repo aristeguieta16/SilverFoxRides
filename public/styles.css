@@ -689,3 +689,23 @@ form#booking-form input[type="number"]::placeholder {
         margin: 3px 0;
     }
 }
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        padding: 10px;
+    }
+    .header {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+    .button {
+        width: 100%;
+        font-size: 1rem;
+        padding: 15px;
+    }
+    /* Adjust images and other elements */
+    img {
+        width: 100%;
+        height: auto;
+    }
+}
