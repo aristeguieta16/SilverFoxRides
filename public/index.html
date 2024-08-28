@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SilverFox - Private Transport</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <a href="index.html">
+                <img src="SilverFox.png" alt="SilverFox Logo" class="logo">
+            </a>
+            <h1 class="brand-name">SILVERFOX RIDES</h1>
+            <nav>
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="#services-section" class="nav-link">Services</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </nav>
+        </div>
+        <div class="header-button-container">
+            <a href="book.html" class="header-button">BOOK</a>        </div>
+    </header>
+    <main>
+        <section class="hero">
+            <div class="hero-text">
+                <h2>
+                    THE <span class="highlight">RIDE</span><br>
+                    <span class="choice">CHOICE</span>
+                </h2>
+                <p>“Always Available, Always on Time”</p>                
+                <a href="book.html" class="cta-button">BOOK WITH US</a>            </div>
+            <div class="hero-image">
+                <img src="SUV.png" alt="SUV Image">
+            </div>
+        </section>
+        <section id="services-section" class="offer-section">
+            <div class="offer-header">
+                <h2>WHAT WE OFFER</h2>
+                <p>THE <span class="highlight">RIDE</span> CHOICE!</p>
+            </div>
+            <div class="offer-grid">
+                <div class="offer-item">
+                    <img src="airplaneLan.png" alt="Airport Pick Up">
+                    <h3>AIRPORT PICK UP</h3>
+                    <p>Reliable airport pickup, ensuring a smooth and comfortable ride from the terminal to your destination.</p>
+                </div>
+                <div class="offer-item">
+                    <img src="airplaneTO.png" alt="Airport Drop Off">
+                    <h3>AIRPORT DROP OFF</h3>
+                    <p>Convenient airport drop-off service, getting you to your flight on time and stress-free.</p>
+                </div>
+                <div class="offer-item">
+                    <img src="tie.png" alt="Daily Errands">
+                    <h3>DAILY ERRANDS</h3>
+                    <p>Efficient and reliable transport for your daily errands, making sure you get everything done with ease and comfort.</p>
+                </div>
+                <div class="offer-item">
+                    <img src="cheers.png" alt="Activities">
+                    <h3>ACTIVITIES</h3>
+                    <p>Enjoy memorable outings with our tailored transport for vineyard tours, bar nights, and brewery visits. We handle the driving, so you can focus on the fun.</p>
+                </div>
+            </div>
+        </section>
+        <section id="contact" class="contact-us">
+            <h2>CONTACT US!</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <p><strong>Mail:</strong></p>
+                    <a href="mailto:josepabon@silverfoxrides.com">josepabon@silverfoxrides.com</a>
+                    <p><strong>Phone Number:</strong></p>
+                    <a href="tel:+15129159962">+1 512-915-9962</a>
+        
+                    <!-- Formspree Form -->
+                    <form action="https://formspree.io/f/mqazbneo" method="POST" id="contactForm">
+                        <input type="text" name="fullName" id="fullName" placeholder="Full Name" required>
+                        <input type="email" name="email" id="email" placeholder="Email" required>
+                        <input type="tel" name="phoneNumber" id="phoneNumber" placeholder="Phone Number" required>
+                        <textarea name="message" id="message" placeholder="Message" required></textarea>
+                        <button type="submit" class="send-message-button">SEND MESSAGE</button>
+                        <p id="warningMessage" style="display: none; color: darkred; font-weight: bold; margin-top: 10px;"></p>
+                    </form>
+                </div>
+            </div>
+        </section>      
+        <script 
+            src="contactForm.js">
+        </script>
+    </main>
+</body>
+</html>

@@ -1,0 +1,711 @@
+body {
+    background-color: black;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: black;
+    position: fixed; /* Makes the header fixed at the top */
+    top: 0; /* Position it at the top of the viewport */
+    left: 0;
+    width: 100%; /* Ensure it spans the full width */
+    z-index: 1000; /* Keep it on top of other content */
+}
+
+body {
+    margin-top: 100px; /* Add margin to the top of the body to prevent content from being hidden behind the fixed header */
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 80px;
+    margin-right: 10px;
+}
+
+.brand-name {
+    font-size: 30px;
+    color: white;
+    margin-right: 40px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+}
+
+.nav-link {
+    margin-left: 20px;
+    color: white;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: yellow;
+}
+
+.nav-link:hover::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: yellow;
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+}
+
+.header-button-container {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 80px; /* Adjust this value to move it more to the left */
+    top: 30px;
+}
+
+.header-button {
+    background-color: yellow;
+    color: black;
+    padding: 12px 60px; 
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 20px;
+}
+
+.header-button:hover {
+    background-color: #FFD700;
+}
+
+.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Align items at the top */
+    padding: 150px 20px; /* Adjust the padding to add space at the top */
+    background-color: black;
+    position: relative;
+}
+
+.hero-text {
+    max-width: 40%;
+    z-index: 2;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 20px;
+}
+
+.hero-text h2 {
+    font-size: 60px;
+    margin-bottom: 10px;
+    font-weight: 400;
+    line-height: 1.2;
+}
+
+.highlight {
+    font-weight: bold;
+    font-style: italic;
+    text-decoration: underline;
+    display: inline; /* Forces "RIDE" to be on its own line */
+}
+
+.choice {
+    display: block; /* Forces "CHOICE" to be on its own line */
+}
+
+.hero-text p {
+    font-size: 16px;
+    margin-bottom: 60px; /* Increase the space between the text and button */
+}
+
+.cta-button {
+    background-color: yellow;
+    color: black;
+    padding: 15px 60px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 30px;
+    font-family: 'Montserrat', sans-serif;
+    margin-top: 30px;
+}
+
+.cta-button:hover {
+    background-color: #FFD700;
+}
+
+.hero-image {
+    position: absolute;
+    right: -250px; /* Keep the image half off the screen */
+    bottom: 0; /* Adjust the image alignment */
+    z-index: 1;
+}
+
+.hero-image img {
+    max-width: 1200px;
+    height: auto;
+}
+
+.offer-section {
+    padding: 60px 20px;
+    background-color: black;
+    color: yellow;
+    text-align: center;
+}
+
+.offer-header h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.offer-header p {
+    font-size: 24px;
+    margin-bottom: 50px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.offer-grid {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    flex-wrap: wrap;
+}
+
+.offer-item {
+    max-width: 300px;
+    text-align: center;
+}
+
+.offer-item img {
+    height: 80px;
+    margin-bottom: 20px;
+}
+
+.offer-item h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.offer-item p {
+    font-size: 16px;
+    line-height: 1.5;
+    font-family: 'Montserrat', sans-serif;
+    color: #B0B0B0;
+}
+.contact-us {
+    padding: 100px 20px;
+    background-color: black;
+    color: white;
+    text-align: center; /* Center align the entire section */
+    font-family: 'Montserrat', sans-serif;
+}
+
+.contact-us h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.contact-content {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center align all items */
+    gap: 20px; /* Adjust the space between elements */
+}
+
+.contact-info {
+    text-align: center; /* Center align the text */
+    margin-top: 10px 0 15px; /* Add some space above the contact info */
+    margin-bottom: 20px;
+    gap: 30px;
+}
+
+.contact-info p,
+.contact-info a {
+    color: yellow;
+    font-size: 18px;
+    margin: 5px 0;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+}
+
+/* General Body Styles */
+body {
+    background-color: black;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header Styles */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: black;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    top: 0;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 80px;
+    margin-right: 10px;
+}
+
+.brand-name {
+    font-size: 30px;
+    color: white;
+    margin-right: 40px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+}
+
+.nav-link {
+    margin-left: 20px;
+    color: white;
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: yellow;
+}
+
+.nav-link:hover::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: yellow;
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+}
+
+.header-button-container {
+    display: flex;
+    align-items: center;
+}
+
+.header-button {
+    background-color: yellow;
+    color: black;
+    padding: 10px 60px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 20px;
+}
+
+.header-button:hover {
+    background-color: #FFD700;
+}
+
+/* Main Content Styles */
+main {
+    padding-top: 120px; /* Adjust to prevent content from hiding under the fixed header */
+}
+
+.booking-form-section {
+    text-align: center;
+    padding: 60px 20px;
+    margin: 0 auto;
+    max-width: 9000px;
+    background-color: rgba(0, 0, 0, 0.8); /* Darker transparent background for better readability */
+    border-radius: 100px;
+}
+
+.booking-form-section h2 {
+    font-size: 48px;
+    margin-bottom: 40px;
+    color: white;
+    font-weight: bold;
+}
+
+form#booking-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.ride-choice {
+    position: relative;
+    margin-bottom: 40px;
+}
+
+#rideChoiceBtn {
+    background-color: yellow;
+    color: black;
+    padding: 15px 60px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
+    border: none;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: black; /* Change background color to black */
+    color: white; /* Change text color to white */
+    width: 100%;
+    max-width: 300px; /* Match the dropdown width to the button */
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    left: 50%;
+    transform: translateX(-50%); /* This will center the dropdown */
+    top: 40%; /* Ensures it is positioned just below the button */
+    transition: all 0.3s ease;
+}
+
+.dropdown-content a {
+    color: white; /* Change text color to white */
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: center; /* Center align the text */
+}
+
+.dropdown-content a:hover {
+    background-color: #333; /* Change hover background color for better contrast */
+}
+
+.show {
+    display: block;
+}
+.same-as-pickup {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the content horizontally */
+    font-size: 14px; /* Reduce the font size */
+    color: white;
+    margin-top: 10px;
+    text-align: center; /* Center the text */
+    max-width: 80%; /* Reduce the width to fit better */
+    margin-left: auto; /* Center the element horizontally */
+    margin-right: auto; /* Center the element horizontally */
+}
+
+.same-as-pickup input[type="checkbox"] {
+    margin-right: 10px;
+    transform: scale(1.2); /* Increase the size of the checkbox for visibility */
+}
+
+ group {
+    display: flex;
+    flex-direction: flex-start;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px; /* Adjust the width to ensure better alignment */
+}
+
+form#booking-form input[type="text"],
+form#booking-form input[type="date"],
+form#booking-form input[type="time"] {
+    width: 100%; /* Ensure the width stays consistent */
+    max-width: 300px; /* Set a maximum width */
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    color: black;
+}
+
+form#booking-form input[type="text"]::placeholder,
+form#booking-form input[type="date"]::placeholder,
+form#booking-form input[type="time"]::placeholder {
+    color: #B0B0B0;
+}
+
+.cta-button {
+    background-color: yellow;
+    color: black;
+    padding: 15px 60px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 30px;
+    font-family: 'Montserrat', sans-serif;
+    margin-top: 20px;
+    cursor: pointer;
+    border: none;
+}
+
+.cta-button:hover {
+    background-color: #FFD700;
+}
+
+body {
+    background-image: url('SUV.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: black; /* Ensures black background behind the image */
+    background-attachment: fixed;
+}
+
+.booking-form-section {
+    background-color: rgba(0, 0, 0, 0.7); /* Adds a transparent black background to the booking section to make it readable */
+    padding: 110px 20px;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+.same-as-pickup label {
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.additional-info {
+    text-align: center;
+    margin-top: 50px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1); /* Slightly transparent background */
+    color: white;
+    font-size: 18px;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: capitalize;
+}
+
+.additional-info p {
+    margin: 0;
+    line-height: 1.6;
+}
+
+.contact-link {
+    color: yellow;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.contact-link:hover {
+    text-decoration: underline;
+}
+
+.warning-message {
+    color: #B22222; /* Dark red color */
+    background-color: #F8D7DA; /* Light red background to make it stand out */
+    border: 1px solid #B22222; /* Dark red border */
+    border-radius: 5px; /* Slightly rounded corners */
+    padding: 10px; /* Padding for spacing inside the box */
+    margin-bottom: 20px; /* Space below the warning message */
+    font-size: 16px; /* Font size for readability */
+    display: none; /* Initially hidden */
+    text-align: center; /* Center the text */
+}
+
+.contact-us {
+    padding: 100px 20px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.contact-us h2 {
+    font-size: 36px;
+    margin-bottom: 50px;
+    font-weight: bold;
+}
+
+.contact-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+form#contactForm {
+    max-width: 600px;
+    width: 100%;
+    margin-top: 50px;
+}
+
+form#contactForm input,
+form#contactForm textarea {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+form#contactForm textarea {
+    resize: none;
+    height: 150px;
+}
+
+.send-message-button {
+    background-color: yellow;
+    color: black;
+    padding: 15px 30px;
+    text-align: center;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.send-message-button:hover {
+    background-color: #FFD700;
+}
+/* General mobile styles */
+@media (max-width: 600px) {
+    body {
+        font-size: 14px;
+    }
+    .header-left {
+        flex-direction: column;
+        align-items: center;
+    }
+    nav {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+    }
+    .ride-choice {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .dropdown-content {
+        width: 100%;
+        text-align: center;
+    }
+    .form-group {
+        flex-direction: column;
+    }
+    .cta-button {
+        width: 100%;
+        padding: 15px;
+    }
+    
+}
+
+form#booking-form input[type="number"] {
+    width: 100%; /* Full width of the parent container */
+    max-width: 150px; /* Adjusted max width to make it smaller and more symmetrical */
+    padding: 15px; /* Same padding as other input fields */
+    border-radius: 10px; /* Same border radius for consistency */
+    border: 1px solid #ccc; /* Consistent border color */
+    font-size: 16px; /* Same font size for uniformity */
+    color: black;
+    margin-bottom: 20px; /* Space between input fields */
+    text-align: center; /* Center the text inside the input */
+}
+
+form#booking-form input[type="number"]::placeholder {
+    color: #B0B0B0;
+}
+.passengers-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 5px; /* Further reduced the margin */
+    margin-bottom: 5px;
+}
+
+/* Adjust the spacing between each form group */
+.form-group {
+    display: flex;
+    justify-content: center;
+    margin: 5px 0; /* Reduced to bring the inputs closer together */
+}
+
+/* Aligning and reducing the space between input fields */
+.form-group input {
+    margin: 3px 0; /* Tighter spacing between the individual inputs */
+    padding: 10px;
+}
+
+/* If needed, further adjust the top padding for the booking section */
+.booking-form-section {
+    padding: 50px 20px; /* Slightly reduced padding at the top */
+}
+.ride-choice {
+    margin-bottom: -20px; /* Reduce the space below the ride choice button */
+}
+
+.passengers-container input {
+    max-width: 150px; /* Keep the width consistent */
+    margin-bottom: 10px; /* Further tighten the gap below the passengers box */
+}
+
+/* Reduce overall margin between inputs to create a more grouped effect */
+.form-group input {
+    padding: 10px;
+    margin: 5px 0;
+    max-width: 300px; /* Keep all inputs uniformly sized */
+}
+
+/* Further adjustments for mobile */
+@media (max-width: 768px) {
+    .passengers-container {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    .form-group {
+        margin: 3px 0;
+    }
+}
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        padding: 10px;
+    }
+    .header {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+    .button {
+        width: 100%;
+        font-size: 1rem;
+        padding: 15px;
+    }
+    /* Adjust images and other elements */
+    img {
+        width: 100%;
+        height: auto;
+    }
+}
