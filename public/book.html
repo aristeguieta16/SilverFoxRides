@@ -285,6 +285,42 @@
         alert('An error occurred while processing your payment. Please try again.');
     });
 }
+            console.log("Starting Square Checkout with price:", price);
+
+            const reservationDetails = {
+                pickupLocation: document.getElementById('pickupLocation').value,
+                dropoffLocation: document.getElementById('dropoffLocation1').value,
+                pickupDate: document.getElementById('pickupDate').value,
+                pickupTime: document.getElementById('pickupTime').value,
+                customerFirstName: document.getElementById('firstName').value,
+                customerLastName: document.getElementById('lastName').value,
+                customerPhoneNumber: document.getElementById('phoneNumber').value,
+                customerEmail: "customer@example.com" // Replace with actual customer email if available
+            };
+
+            fetch('/create-checkout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    price: price,
+                    idempotencyKey: uuidv4(), // Generating idempotencyKey here
+                    reservationDetails: reservationDetails
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.checkoutUrl) {
+                    window.location.href = data.checkoutUrl;
+                } else {
+                    alert('An error occurred during the payment process.');
+                }
+            })
+            .catch(error => {
+                console.error('Error in Square Checkout:', error);
+                alert('An error occurred while processing your payment. Please try again.');
+            });
 
 
         // Function to calculate the distance between locations
