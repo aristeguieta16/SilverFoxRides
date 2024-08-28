@@ -73,12 +73,18 @@ app.use(bodyParser.json());
 app.post('/api/payment-confirmation', (req, res) => {
   console.log('Received webhook payload:', JSON.stringify(req.body));
 
-  if (!validateSquareSignature(req)) {
-    console.error('Invalid signature received for webhook');
-    return res.status(400).json({ message: 'Invalid signature' });
-  }
+  // Log the headers to inspect the incoming signature
+  console.log('Received Headers:', JSON.stringify(req.headers));
+
+  // Skip signature validation for now, just to check the data flow
+  // if (!validateSquareSignature(req)) {
+  //   console.error('Invalid signature received for webhook');
+  //   return res.status(400).json({ message: 'Invalid signature' });
+  // }
 
   const event = req.body;
+
+  console.log('Event Type:', event.type);
 
   if (event.type === 'payment.created') {
     try {
@@ -91,7 +97,7 @@ app.post('/api/payment-confirmation', (req, res) => {
 
       console.log('Valid payment data received:', JSON.stringify(paymentDetails));
 
-      // Proceed with processing...
+      // Temporarily skip processing logic, just log the information
       const note = paymentDetails.note || '';
       const reservationDetails = {
         pickupLocation: extractField(note, 'Pickup Location'),
@@ -101,16 +107,18 @@ app.post('/api/payment-confirmation', (req, res) => {
         customerFirstName: extractField(note, 'First Name'),
         customerLastName: extractField(note, 'Last Name'),
         customerPhoneNumber: extractField(note, 'Phone'),
-        customerEmail: paymentDetails.buyer_email_address, // This is captured directly from the payment details
+        customerEmail: paymentDetails.buyer_email_address || 'not provided',
       };
 
       console.log('Reservation details:', reservationDetails);
 
-      sendEmailNotification(reservationDetails);
-      res.status(200).json({ message: 'Payment confirmation received' });
+      // Commenting out actual email sending for now
+      // sendEmailNotification(reservationDetails);
+
+      res.status(200).json({ message: 'Payment confirmation received and logged.' });
     } catch (error) {
-      console.error('Error processing payment confirmation:', error.message);
-      res.status(500).json({ message: 'Internal server error' });
+      console.error('Error processing payment confirmation:', error.stack || error.message);
+      res.status(500).json({ message: 'Internal server error during processing.' });
     }
   } else {
     console.error('Invalid event type:', event.type);
