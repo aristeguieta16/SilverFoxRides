@@ -44,6 +44,9 @@ function validateSquareSignature(req) {
   }
 }
 
+app.get('/', (req, res) => {
+  res.send('Server is running');
+});
 
 app.post('/create-checkout', async (req, res) => {
   const { price, idempotencyKey, reservationDetails } = req.body;
