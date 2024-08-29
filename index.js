@@ -22,25 +22,40 @@ const client = new Client({
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 function validateSquareSignature(req) {
-  // Only bypass signature validation if in development mode
+  // Log the body of the request for debugging purposes
+  console.log('Request Body:', JSON.stringify(req.body)); 
+
+  // Log the headers of the request for debugging purposes
+  console.log('Headers:', JSON.stringify(req.headers, null, 2)); 
+
+  // Bypass signature validation in development mode
   if (process.env.NODE_ENV === 'development') {
-    console.log('Bypassing signature validation in development mode');
-    return true;
+      console.log('Bypassing signature validation in development mode');
+      return true;
   }
 
   try {
-    const signature = req.headers['x-square-signature'];
-    const body = JSON.stringify(req.body);
-    const expectedSignature = crypto
-      .createHmac('sha256', process.env.SQUARE_WEBHOOK_SIGNATURE_KEY)
-      .update(body, 'utf8')
-      .digest('base64');
+      // Extract the signature from the headers
+      const signature = req.headers['x-square-signature'];
 
-    console.log('Calculated signature:', expectedSignature);
-    return signature === expectedSignature;
+      // Convert the body to a string (as this is what is used to create the HMAC)
+      const body = JSON.stringify(req.body);
+
+      // Create the expected signature using the webhook signature key
+      const expectedSignature = crypto
+          .createHmac('sha256', process.env.SQUARE_WEBHOOK_SIGNATURE_KEY)
+          .update(body, 'utf8')
+          .digest('base64');
+
+      // Log the calculated signature for comparison
+      console.log('Calculated signature:', expectedSignature);
+
+      // Compare the calculated signature with the signature from the headers
+      return signature === expectedSignature;
   } catch (error) {
-    console.error('Error during signature validation:', error.message);
-    return false;
+      // Log any errors that occur during the signature validation process
+      console.error('Error during signature validation:', error.message);
+      return false;
   }
 }
 
