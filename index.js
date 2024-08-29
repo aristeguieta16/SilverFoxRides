@@ -11,6 +11,9 @@ require('dotenv').config();
 
 const app = express();
 
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(bodyParser.json());
 
 const client = new Client({
@@ -18,6 +21,7 @@ const client = new Client({
   environment: Environment.Production,
 });
 
+// Middleware to capture raw body data for signature validation
 app.use((req, res, next) => {
   let rawBody = '';
   req.on('data', (chunk) => {
@@ -58,41 +62,42 @@ function validateSquareSignature(req) {
   }
 }
 
+// Serve the main HTML file for the root route
 app.get('/', (req, res) => {
-  res.send('Server is running');
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.post('/create-checkout', async (req, res) => {
   const { price, idempotencyKey, reservationDetails } = req.body;
 
   try {
-      const order = {
-          locationId: process.env.SQUARE_LOCATION_ID,
-          lineItems: [
-              {
-                  name: "Ride Booking",
-                  quantity: "1",
-                  basePriceMoney: {
-                      amount: Math.round(price * 100), // Amount in cents
-                      currency: "USD",
-                  },
-              },
-          ],
-          note: `Pickup Location: ${reservationDetails.pickupLocation}, Dropoff Location: ${reservationDetails.dropoffLocation}, Pickup Date: ${reservationDetails.pickupDate}, Pickup Time: ${reservationDetails.pickupTime}, First Name: ${reservationDetails.customerFirstName}, Last Name: ${reservationDetails.customerLastName}, Phone: ${reservationDetails.customerPhoneNumber}`,
-      };
+    const order = {
+      locationId: process.env.SQUARE_LOCATION_ID,
+      lineItems: [
+        {
+          name: "Ride Booking",
+          quantity: "1",
+          basePriceMoney: {
+            amount: Math.round(price * 100), // Amount in cents
+            currency: "USD",
+          },
+        },
+      ],
+      note: `Pickup Location: ${reservationDetails.pickupLocation}, Dropoff Location: ${reservationDetails.dropoffLocation}, Pickup Date: ${reservationDetails.pickupDate}, Pickup Time: ${reservationDetails.pickupTime}, First Name: ${reservationDetails.customerFirstName}, Last Name: ${reservationDetails.customerLastName}, Phone: ${reservationDetails.customerPhoneNumber}`,
+    };
 
-      const body = {
-          idempotencyKey: idempotencyKey,
-          order: order,
-      };
+    const body = {
+      idempotencyKey: idempotencyKey,
+      order: order,
+    };
 
-      const checkoutResponse = await client.checkoutApi.createPaymentLink(body);
-      const checkoutUrl = checkoutResponse.result.paymentLink.url;
+    const checkoutResponse = await client.checkoutApi.createPaymentLink(body);
+    const checkoutUrl = checkoutResponse.result.paymentLink.url;
 
-      res.json({ checkoutUrl });
+    res.json({ checkoutUrl });
   } catch (error) {
-      console.error('Square API Error:', error);
-      res.status(500).json({ error: 'Error creating checkout. Please try again later.' });
+    console.error('Square API Error:', error);
+    res.status(500).json({ error: 'Error creating checkout. Please try again later.' });
   }
 });
 
@@ -256,8 +261,11 @@ function sendSMSNotification(reservationDetails) {
 }
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+// Set timeout to avoid gateway timeouts
+server.setTimeout(5000); // 5 seconds timeout
 
 module.exports = app;
