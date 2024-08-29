@@ -96,57 +96,41 @@ app.post('/create-checkout', async (req, res) => {
   }
 });
 
-app.post('/api/payment-confirmation', (req, res) => {
-  // Log headers and body for debugging
-  console.log('Headers:', JSON.stringify(req.headers, null, 2));
-  console.log('Body:', JSON.stringify(req.body, null, 2));
+app.post('/api/payment-confirmation', async (req, res) => {
+  console.log('Received payment confirmation request:', new Date().toISOString());
 
   try {
+    const start = Date.now();
     const event = req.body;
-    console.log('Event Type:', event.event_type);  // Adjusted to match Square's test event
 
+    // Validate signature
     if (!validateSquareSignature(req)) {
       console.error('Invalid signature');
       return res.status(400).json({ message: 'Invalid signature' });
     }
 
-    if (event.event_type === 'TEST_NOTIFICATION') {
-      console.log('Received TEST_NOTIFICATION from Square.');
+    console.log('Signature validation passed:', Date.now() - start, 'ms');
 
-      // Respond with a success message
-      return res.status(200).json({ message: 'Test notification received and logged.' });
-    } else if (event.event_type === 'payment.created') {
+    // Process event
+    if (event.event_type === 'payment.created') {
+      console.log('Processing payment created event:', new Date().toISOString());
+
       const paymentDetails = event.data?.object?.payment;
-
       if (!paymentDetails) {
         console.error('Invalid payment data received:', JSON.stringify(event));
         return res.status(400).json({ message: 'Invalid payment data received.' });
       }
 
-      console.log('Valid payment data received:', JSON.stringify(paymentDetails));
-
-      const note = paymentDetails.note || '';
-      const reservationDetails = {
-        pickupLocation: extractField(note, 'Pickup Location'),
-        dropoffLocation: extractField(note, 'Dropoff Location'),
-        pickupDate: extractField(note, 'Pickup Date'),
-        pickupTime: extractField(note, 'Pickup Time'),
-        customerFirstName: extractField(note, 'First Name'),
-        customerLastName: extractField(note, 'Last Name'),
-        customerPhoneNumber: extractField(note, 'Phone'),
-        customerEmail: paymentDetails.buyer_email_address || 'not provided',
-      };
-
-      console.log('Reservation details:', reservationDetails);
-
+      // Continue processing...
+      console.log('Successfully processed event in:', Date.now() - start, 'ms');
       return res.status(200).json({ message: 'Payment confirmation received and logged.' });
-    } else {
-      console.error('Invalid event type:', event.event_type);
-      return res.status(400).json({ message: 'Invalid event type' });
     }
+
+    console.error('Invalid event type:', event.event_type);
+    res.status(400).json({ message: 'Invalid event type' });
   } catch (error) {
     console.error('Error processing payment confirmation:', error.stack || error.message);
-    return res.status(500).json({ message: 'Internal server error during processing.' });
+    res.status(500).json({ message: 'Internal server error during processing.' });
   }
 });
 
