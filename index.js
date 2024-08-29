@@ -11,6 +11,8 @@ require('dotenv').config();
 
 const app = express();
 
+app.use(bodyParser.json());
+
 const client = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
   environment: Environment.Production,
@@ -67,22 +69,26 @@ app.post('/create-checkout', async (req, res) => {
   }
 });
 
-
-app.use(bodyParser.json());
-
-
 app.post('/api/payment-confirmation', (req, res) => {
+  // Log headers and body for debugging
+  console.log('Headers:', JSON.stringify(req.headers, null, 2));
+  console.log('Body:', JSON.stringify(req.body, null, 2));
+
   try {
-    // Temporarily disable signature validation for testing
-    // if (!validateSquareSignature(req)) {
-    //   console.error('Invalid signature');
-    //   return res.status(400).json({ message: 'Invalid signature' });
-    // }
-
     const event = req.body;
-    console.log('Event Type:', event.type);
+    console.log('Event Type:', event.event_type);  // Adjusted to match Square's test event
 
-    if (event.type === 'payment.created') {
+    if (!validateSquareSignature(req)) {
+      console.error('Invalid signature');
+      return res.status(400).json({ message: 'Invalid signature' });
+    }
+
+    if (event.event_type === 'TEST_NOTIFICATION') {
+      console.log('Received TEST_NOTIFICATION from Square.');
+
+      // Respond with a success message
+      return res.status(200).json({ message: 'Test notification received and logged.' });
+    } else if (event.event_type === 'payment.created') {
       const paymentDetails = event.data?.object?.payment;
 
       if (!paymentDetails) {
@@ -108,7 +114,7 @@ app.post('/api/payment-confirmation', (req, res) => {
 
       return res.status(200).json({ message: 'Payment confirmation received and logged.' });
     } else {
-      console.error('Invalid event type:', event.type);
+      console.error('Invalid event type:', event.event_type);
       return res.status(400).json({ message: 'Invalid event type' });
     }
   } catch (error) {
@@ -237,5 +243,11 @@ Time: ${reservationDetails.pickupTime}`;
       console.error('Error sending SMS:', error.response ? error.response.data : error.message);
     });
 }
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
 
 module.exports = app;
