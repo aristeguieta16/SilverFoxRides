@@ -18,44 +18,43 @@ const client = new Client({
   environment: Environment.Production,
 });
 
+app.use((req, res, next) => {
+  let rawBody = '';
+  req.on('data', (chunk) => {
+    rawBody += chunk.toString();
+  });
+  req.on('end', () => {
+    req.rawBody = rawBody;
+    console.log('Raw Body:', rawBody); // Log the raw body for debugging
+    next();
+  });
+});
+
 // Force NODE_ENV to development for local testing
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 function validateSquareSignature(req) {
-  // Log the body of the request for debugging purposes
-  console.log('Request Body:', JSON.stringify(req.body)); 
+  console.log('Request Body:', req.rawBody); // Log the raw body for debugging
+  console.log('Headers:', JSON.stringify(req.headers, null, 2)); // Log the headers for debugging
 
-  // Log the headers of the request for debugging purposes
-  console.log('Headers:', JSON.stringify(req.headers, null, 2)); 
-
-  // Bypass signature validation in development mode
   if (process.env.NODE_ENV === 'development') {
-      console.log('Bypassing signature validation in development mode');
-      return true;
+    console.log('Bypassing signature validation in development mode');
+    return true;
   }
 
   try {
-      // Extract the signature from the headers
-      const signature = req.headers['x-square-signature'];
+    const signature = req.headers['x-square-signature'];
+    const body = req.rawBody; // Use the raw body captured by middleware
+    const expectedSignature = crypto
+      .createHmac('sha256', process.env.SQUARE_WEBHOOK_SIGNATURE_KEY)
+      .update(body, 'utf8')
+      .digest('base64');
 
-      // Convert the body to a string (as this is what is used to create the HMAC)
-      const body = JSON.stringify(req.body);
-
-      // Create the expected signature using the webhook signature key
-      const expectedSignature = crypto
-          .createHmac('sha256', process.env.SQUARE_WEBHOOK_SIGNATURE_KEY)
-          .update(body, 'utf8')
-          .digest('base64');
-
-      // Log the calculated signature for comparison
-      console.log('Calculated signature:', expectedSignature);
-
-      // Compare the calculated signature with the signature from the headers
-      return signature === expectedSignature;
+    console.log('Calculated signature:', expectedSignature);
+    return signature === expectedSignature;
   } catch (error) {
-      // Log any errors that occur during the signature validation process
-      console.error('Error during signature validation:', error.message);
-      return false;
+    console.error('Error during signature validation:', error.message);
+    return false;
   }
 }
 
