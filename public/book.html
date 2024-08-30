@@ -57,7 +57,6 @@
                 <div id="flightNumberContainer" class="form-group" style="display:none;">
                     <input type="text" id="flightNumber" placeholder="Enter Flight Number (e.g., NK1908)">
                 </div>
-                <!-- This is the single container for Drop-Off Location 2 and the checkbox -->
                 <div class="form-group" id="dropoffLocation2Container" style="display:none;">
                     <input type="text" id="dropoffLocation2" placeholder="Drop-Off Location 2">
                     <label class="same-as-pickup">
@@ -72,19 +71,6 @@
         <section class="additional-info">
             <p>If you wish to book a service with more than two stops, please <a href="index.html#contact" class="contact-link">click here</a> to contact us via email or phone for availability.</p>
         </section>
-        <script>
-            document.getElementById('pickupDate').addEventListener('change', function() {
-                const selectedDate = new Date(this.value);
-                const currentDate = new Date();
-        
-                if (selectedDate.getFullYear() > currentDate.getFullYear()) {
-                    const confirmation = confirm(`Are you sure this reservation is for ${selectedDate.toLocaleDateString()}? Please double-check your selected date.`);
-                    if (!confirmation) {
-                        this.value = ''; // Clear the date if the user cancels
-                    }
-                }
-            });
-        </script>        
     </main>
 
     <script>
@@ -97,12 +83,11 @@
             new google.maps.places.Autocomplete(input3);
         }
 
-        // Initialize the Google Places API when the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', function () {
             initializeGooglePlaces();
+            setupRideChoiceListeners();
         });
 
-        // Handle the ride choice selection and form display
         function setupRideChoiceListeners() {
             document.getElementById('rideChoiceBtn').addEventListener('click', function () {
                 document.getElementById('rideChoiceDropdown').classList.toggle('show');
@@ -120,7 +105,6 @@
                 document.getElementById('flightNumberContainer').style.display = 'none';
                 document.getElementById('rideChoiceBtn').textContent = "ROUND TRIP";
                 document.getElementById('rideChoiceDropdown').classList.remove('show');
-
                 document.getElementById('sameAsPickup').checked = false;
                 document.getElementById('dropoffLocation2').value = '';
             });
@@ -152,23 +136,7 @@
                 }
             });
         }
-        document.getElementById('pickupDate').addEventListener('change', function() {
-            const selectedDate = new Date(this.value);
-            const currentDate = new Date();
 
-            if (selectedDate.getFullYear() > currentDate.getFullYear()) {
-                const confirmation = confirm(`Are you sure this reservation is for ${selectedDate.toLocaleDateString()}? Please double-check your selected date.`);
-            if (!confirmation) {
-                this.value = ''; // Clear the date if the user cancels
-            }
-            }
-        });
-
-
-        // Initialize ride choice listeners
-        document.addEventListener('DOMContentLoaded', setupRideChoiceListeners);
-
-        // Form validation and submission
         document.getElementById('booking-form').addEventListener('submit', function(event) {
             event.preventDefault();
 
@@ -189,9 +157,9 @@
                 return;
             }
             if (numPassengers > 4) {
-                alert("For parties larger than 4 passengers, please reach out to us directly to ensure we can provide the comfort and service you deserve. We look forward to accommodating your group with the utmost care!");
+                alert("For parties larger than 4 passengers, please reach out to us directly.");
                 return;
-            }       
+            }
 
             if (pickupDate < today) {
                 warningMessage.textContent = "The selected pick-up date has already passed. Please select a valid date.";
@@ -211,21 +179,22 @@
             // Calculate distance and price, then initiate Square checkout
             if (rideChoice === "ONE WAY" || rideChoice === "TO AIRPORT" || rideChoice === "FROM AIRPORT") {
                 calculateDistance(pickupLocation, dropoffLocation1, function(distance) {
-                    const price = calculatePrice(distance);
+                    const price = calculatePrice(distance); // Define price correctly here
+                    console.log('Calculated Price:', price); // Debug log for price
                     createSquareCheckout(price);
                 });
             } else if (rideChoice === "ROUND TRIP") {
                 calculateDistance(pickupLocation, dropoffLocation1, function(distance1) {
                     if (document.getElementById('sameAsPickup').checked) {
-                        // Round trip back to the pickup location
                         const totalDistance = distance1 * 2;
                         const price = calculatePrice(totalDistance);
+                        console.log('Calculated Price for ROUND TRIP:', price); // Debug log for price
                         createSquareCheckout(price);
                     } else {
-                        // Round trip with a different dropoff location
                         calculateDistance(dropoffLocation1, dropoffLocation2, function(distance2) {
                             const totalDistance = distance1 + distance2;
                             const price = calculatePrice(totalDistance);
+                            console.log('Calculated Price for multiple stops:', price); // Debug log for price
                             createSquareCheckout(price);
                         });
                     }
@@ -233,7 +202,6 @@
             }
         });
 
-        // Function to generate a UUID for idempotency
         function uuidv4() {
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
                 var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
@@ -242,49 +210,6 @@
         }
 
         function createSquareCheckout(price) {
-    console.log("Starting Square Checkout with price:", price);
-
-    const reservationDetails = {
-        pickupLocation: document.getElementById('pickupLocation').value,
-        dropoffLocation: document.getElementById('dropoffLocation1').value,
-        pickupDate: document.getElementById('pickupDate').value,
-        pickupTime: document.getElementById('pickupTime').value,
-        customerFirstName: document.getElementById('firstName').value,
-        customerLastName: document.getElementById('lastName').value,
-        customerPhoneNumber: document.getElementById('phoneNumber').value,
-        customerEmail: "customer@example.com" // Replace with actual customer email if available
-    };
-
-    fetch('/create-checkout', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            price: price,
-            idempotencyKey: uuidv4(), // Generating idempotencyKey here
-            reservationDetails: reservationDetails
-        })
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.json(); // Ensure we parse the JSON correctly
-        } else {
-            throw new Error('Server responded with an error');
-        }
-    })
-    .then(data => {
-        if (data.checkoutUrl) {
-            window.location.href = data.checkoutUrl;
-        } else {
-            alert('An error occurred during the payment process.');
-        }
-    })
-    .catch(error => {
-        console.error('Error in Square Checkout:', error);
-        alert('An error occurred while processing your payment. Please try again.');
-    });
-}
             console.log("Starting Square Checkout with price:", price);
 
             const reservationDetails = {
@@ -321,9 +246,8 @@
                 console.error('Error in Square Checkout:', error);
                 alert('An error occurred while processing your payment. Please try again.');
             });
+        }
 
-
-        // Function to calculate the distance between locations
         function calculateDistance(origins, destinations, callback) {
             const service = new google.maps.DistanceMatrixService();
             service.getDistanceMatrix({
@@ -334,6 +258,7 @@
             }, function(response, status) {
                 if (status === 'OK') {
                     const distanceInMiles = response.rows[0].elements[0].distance.value / 1609.34;
+                    console.log("Calculated Distance:", distanceInMiles); // Debugging log
                     callback(distanceInMiles);
                 } else {
                     alert('Could not calculate distance. Please try again.');
@@ -341,11 +266,15 @@
             });
         }
 
-        // Function to calculate the price based on the distance
         function calculatePrice(totalDistance) {
+            if (isNaN(totalDistance) || totalDistance <= 0) {
+                console.error('Invalid distance for price calculation:', totalDistance);
+                return 0; // Default to 0 or a safe fallback
+            }
             return totalDistance > 50 ? totalDistance * 3 : totalDistance * 2.5;
         }
-        
+
     </script>
 
+</body>
 </html>
