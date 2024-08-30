@@ -223,17 +223,18 @@
                 customerEmail: "customer@example.com" // Replace with actual customer email if available
             };
 
-            fetch('/create-checkout', {
+            fetch('https://silverfoxrides.vip/api/create-checkout', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     price: price,
-                    idempotencyKey: uuidv4(), // Generating idempotencyKey here
+                    idempotencyKey: uuidv4(),
                     reservationDetails: reservationDetails
                 })
             })
+
             .then(response => response.json())
             .then(data => {
                 if (data.checkoutUrl) {
