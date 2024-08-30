@@ -11,7 +11,10 @@ require('dotenv').config();
 
 const app = express();
 
-// Serve static files from the 'public' directory
+// Correct middleware setup for serving static files
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Route to serve book.html when visiting the root URL
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'book.html'));
 });
