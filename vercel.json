@@ -12,11 +12,11 @@
   ],
   "routes": [
     {
-      "src": "/api/payment-confirmation",
+      "src": "/api/(.*)",
       "dest": "/index.js"
     },
     {
-      "src": "/api/create-checkout",
+      "src": "/payment-confirmation",
       "dest": "/index.js"
     },
     {

@@ -234,7 +234,6 @@
                     reservationDetails: reservationDetails
                 })
             })
-
             .then(response => response.json())
             .then(data => {
                 if (data.checkoutUrl) {
@@ -247,6 +246,7 @@
                 console.error('Error in Square Checkout:', error);
                 alert('An error occurred while processing your payment. Please try again.');
             });
+
         }
 
         function calculateDistance(origins, destinations, callback) {

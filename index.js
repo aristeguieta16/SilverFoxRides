@@ -6,6 +6,7 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const cors = require('cors');
+app.use(express.json());
 
 app.use(cors());
 
@@ -38,8 +39,13 @@ app.get('/thank-you.html', (req, res) => {
 });
 
 // Create checkout endpoint
-app.post('/create-checkout', async (req, res) => {
+app.post('/api/create-checkout', async (req, res) => {
   const { price, idempotencyKey, reservationDetails } = req.body;
+
+  // Basic validation for the required fields
+  if (!price || !idempotencyKey || !reservationDetails) {
+    return res.status(400).json({ error: 'Missing required fields: price, idempotencyKey, or reservationDetails' });
+  }
 
   try {
     const order = {
@@ -61,21 +67,28 @@ app.post('/create-checkout', async (req, res) => {
       order: order,
     };
 
+    // Make the API call to create the payment link
     const checkoutResponse = await client.checkoutApi.createPaymentLink(checkoutBody);
-    const checkoutUrl = checkoutResponse.result.paymentLink.url;
 
-    // Store reservation details using the order_id
+    // Extract the checkout URL and order ID
+    const checkoutUrl = checkoutResponse.result.paymentLink.url;
     const orderId = checkoutResponse.result.paymentLink.orderId;
+
+    // Store reservation details using the order ID
     reservationStore[orderId] = reservationDetails;
     console.log('Stored reservation details:', reservationStore);
 
-    // Log the stored reservation details
-    console.log('Storing reservation details with orderId:', orderId);
-
-    // Send the checkout URL to the client
+    // Send the checkout URL back to the client
     res.json({ checkoutUrl: checkoutUrl });
   } catch (error) {
+    // Enhanced error logging
     console.error('Square API Error:', error);
+    
+    // Check if the error has a response from Square and log the details
+    if (error.response) {
+      console.error('Square API response:', error.response.data);
+    }
+
     res.status(500).json({ error: 'Error creating checkout.' });
   }
 });
