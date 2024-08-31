@@ -51,11 +51,15 @@ app.get('/thank-you.html', (req, res) => {
 });
 
 // Create checkout endpoint
+// Modify your checkout endpoint to include more detailed logs
 app.post('/api/create-checkout', async (req, res) => {
   const { price, idempotencyKey, reservationDetails } = req.body;
 
-  // Basic validation for the required fields
+  // Log the received request data
+  console.log('Received request to create checkout with:', JSON.stringify(req.body, null, 2));
+
   if (!price || !idempotencyKey || !reservationDetails) {
+    console.error('Validation Error: Missing required fields');
     return res.status(400).json({ error: 'Missing required fields: price, idempotencyKey, or reservationDetails' });
   }
 
@@ -79,26 +83,28 @@ app.post('/api/create-checkout', async (req, res) => {
       order: order,
     };
 
+    console.log('Creating Square checkout with body:', JSON.stringify(checkoutBody, null, 2));
+
     // Make the API call to create the payment link
     const checkoutResponse = await client.checkoutApi.createPaymentLink(checkoutBody);
 
-    // Extract the checkout URL and order ID
+    // Log the response from Square
+    console.log('Square API Response:', JSON.stringify(checkoutResponse.result, null, 2));
+
     const checkoutUrl = checkoutResponse.result.paymentLink.url;
     const orderId = checkoutResponse.result.paymentLink.orderId;
 
-    // Store reservation details using the order ID
     reservationStore[orderId] = reservationDetails;
-    console.log('Stored reservation details:', reservationStore);
+    console.log('Stored reservation details:', JSON.stringify(reservationStore, null, 2));
 
-    // Send the checkout URL back to the client
     res.json({ checkoutUrl: checkoutUrl });
   } catch (error) {
     // Enhanced error logging
-    console.error('Square API Error:', error);
+    console.error('Square API Error:', error.message);
     
-    // Check if the error has a response from Square and log the details
-    if (error.response) {
-      console.error('Square API response:', error.response.data);
+    // Log detailed Square error response if available
+    if (error.response && error.response.data) {
+      console.error('Square API Error Details:', JSON.stringify(error.response.data, null, 2));
     }
 
     res.status(500).json({ error: 'Error creating checkout.' });
