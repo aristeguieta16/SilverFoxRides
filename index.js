@@ -27,6 +27,8 @@ const reservationStore = {};
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+const allowedOrigins = ['https://silverfoxrides.vip'];
+
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps, curl requests, etc.)

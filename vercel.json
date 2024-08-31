@@ -16,10 +16,6 @@
       "dest": "/index.js"
     },
     {
-      "src": "/payment-confirmation",
-      "dest": "/index.js"
-    },
-    {
       "src": "/(.*)",
       "dest": "/public/$1"
     }
