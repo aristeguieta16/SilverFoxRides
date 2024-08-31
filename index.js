@@ -1,4 +1,3 @@
-// Import required modules
 const { Client, Environment } = require('square');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -27,6 +26,20 @@ const reservationStore = {};
 
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl requests, etc.)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // Allow cookies and authentication headers
+}));
 
 // Route for the main page
 app.get('/', (req, res) => {
