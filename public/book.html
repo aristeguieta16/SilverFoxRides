@@ -233,19 +233,20 @@
                     idempotencyKey: uuidv4(),
                     reservationDetails: reservationDetails
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
+                })
+                .then(response => response.json())
+                .then(data => {
                 if (data.checkoutUrl) {
                     window.location.href = data.checkoutUrl;
                 } else {
                     alert('An error occurred during the payment process.');
                 }
-            })
-            .catch(error => {
+                })
+                .catch(error => {
                 console.error('Error in Square Checkout:', error);
                 alert('An error occurred while processing your payment. Please try again.');
-            });
+                });
+
 
         }
 

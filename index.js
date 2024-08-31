@@ -1,3 +1,4 @@
+// Import required modules
 const { Client, Environment } = require('square');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -5,28 +6,12 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const cors = require('cors');
-app.use(express.json());
-
-app.use(cors());
 
 // Initialize Express
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Initialize Square client
-const client = new Client({
-  accessToken: process.env.SQUARE_ACCESS_TOKEN,
-  environment: Environment.Production,
-});
-
-app.use(bodyParser.json());
-
-// In-memory storage for reservation details
-const reservationStore = {};
-
-// Serve static files from the "public" directory
-app.use(express.static(path.join(__dirname, 'public')));
-
+// CORS configuration
 const allowedOrigins = ['https://silverfoxrides.vip'];
 
 app.use(cors({
@@ -42,6 +27,21 @@ app.use(cors({
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true, // Allow cookies and authentication headers
 }));
+
+app.use(express.json());
+app.use(bodyParser.json());
+
+// Initialize Square client
+const client = new Client({
+  accessToken: process.env.SQUARE_ACCESS_TOKEN,
+  environment: Environment.Production,
+});
+
+// In-memory storage for reservation details
+const reservationStore = {};
+
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Route for the main page
 app.get('/', (req, res) => {
