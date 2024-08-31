@@ -1,6 +1,5 @@
-// Import required modules
-const { Client, Environment } = require('square');
 const express = require('express');
+const { Client, Environment } = require('square');
 const bodyParser = require('body-parser');
 const path = require('path');
 const nodemailer = require('nodemailer');
@@ -11,23 +10,24 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// CORS configuration
+// Define allowed origins
 const allowedOrigins = ['https://silverfoxrides.vip'];
 
+// Set up CORS middleware
 app.use(cors({
-  origin: function (origin, callback) {
+  origin: (origin, callback) => {
     // Allow requests with no origin (like mobile apps, curl requests, etc.)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
     }
-    return callback(null, true);
   },
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // Allow cookies and authentication headers
+  credentials: true, // Allows sending cookies and headers like Authorization
 }));
 
+// Middleware to parse JSON
 app.use(express.json());
 app.use(bodyParser.json());
 
@@ -37,10 +37,7 @@ const client = new Client({
   environment: Environment.Production,
 });
 
-// In-memory storage for reservation details
-const reservationStore = {};
-
-// Serve static files from the "public" directory
+// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Route for the main page
