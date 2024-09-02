@@ -13,7 +13,7 @@ const port = process.env.PORT || 3000;
 const reservationStore = {};
 
 // Define allowed origins
-const allowedOrigins = ['https://silverfoxrides.vip', 'https://<your-vercel-deployment>.vercel.app'];
+const allowedOrigins = ['https://silverfoxrides.vip', 'https://silver-fox-rides.vercel.app'];
 
 app.use(cors({
   origin: (origin, callback) => {
