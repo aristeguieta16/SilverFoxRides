@@ -10,26 +10,43 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Define allowed origins
-const allowedOrigins = ['https://silverfoxrides.vip'];
+const reservationStore = {};
 
-// Set up CORS middleware
+// Define allowed origins
+const allowedOrigins = ['https://silverfoxrides.vip', 'https://<your-vercel-deployment>.vercel.app'];
+
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps, curl requests, etc.)
+    console.log(`Incoming request from origin: ${origin}`);
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.error(`CORS error: Origin ${origin} not allowed`);
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // Allows sending cookies and headers like Authorization
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+  credentials: true,
 }));
+
+// Explicitly handle OPTIONS method for all routes to handle preflight requests
+app.options('*', (req, res) => {
+  res.sendStatus(200); // Respond with 200 to OPTIONS preflight requests
+});
 
 // Middleware to parse JSON
 app.use(express.json());
 app.use(bodyParser.json());
+
+// Middleware to log and ensure CORS headers are set correctly
+app.use((req, res, next) => {
+  console.log('Verifying CORS headers are set correctly');
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  next();
+});
 
 // Initialize Square client
 const client = new Client({
@@ -51,10 +68,10 @@ app.get('/thank-you.html', (req, res) => {
 });
 
 // Create checkout endpoint
+// Enhanced error logging for create-checkout endpoint
 app.post('/api/create-checkout', async (req, res) => {
   const { price, idempotencyKey, reservationDetails } = req.body;
 
-  // Basic validation for the required fields
   if (!price || !idempotencyKey || !reservationDetails) {
     return res.status(400).json({ error: 'Missing required fields: price, idempotencyKey, or reservationDetails' });
   }
@@ -79,29 +96,23 @@ app.post('/api/create-checkout', async (req, res) => {
       order: order,
     };
 
-    // Make the API call to create the payment link
     const checkoutResponse = await client.checkoutApi.createPaymentLink(checkoutBody);
-
-    // Extract the checkout URL and order ID
     const checkoutUrl = checkoutResponse.result.paymentLink.url;
     const orderId = checkoutResponse.result.paymentLink.orderId;
 
-    // Store reservation details using the order ID
     reservationStore[orderId] = reservationDetails;
-    console.log('Stored reservation details:', reservationStore);
-
-    // Send the checkout URL back to the client
     res.json({ checkoutUrl: checkoutUrl });
+
   } catch (error) {
-    // Enhanced error logging
-    console.error('Square API Error:', error);
+    console.error('Square API Error:', error.message);
     
-    // Check if the error has a response from Square and log the details
-    if (error.response) {
-      console.error('Square API response:', error.response.data);
+    if (error.response && error.response.data) {
+      console.error('Square API Response Data:', JSON.stringify(error.response.data, null, 2));
+    } else {
+      console.error('Full Error Object:', error);
     }
 
-    res.status(500).json({ error: 'Error creating checkout.' });
+    res.status(500).json({ error: 'Error creating checkout. Please try again later.' });
   }
 });
 
