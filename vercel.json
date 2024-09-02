@@ -12,6 +12,10 @@
   ],
   "routes": [
     {
+      "src": "/payment-confirmation",
+      "dest": "/index.js"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/index.js"
     },
