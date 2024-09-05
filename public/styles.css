@@ -679,33 +679,98 @@ form#booking-form input[type="number"]::placeholder {
     max-width: 300px; /* Keep all inputs uniformly sized */
 }
 
-/* Further adjustments for mobile */
-@media (max-width: 768px) {
-    .passengers-container {
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
-    .form-group {
-        margin: 3px 0;
-    }
-}
-@media (max-width: 768px) {
-    .container {
+/* Mobile styles for header */
+@media (max-width: 600px) {
+    header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 0; /* Adjust padding */
+        background-color: black;
         width: 100%;
-        padding: 10px;
+        box-sizing: border-box;
+        min-height: 140px; /* Ensure enough height for the logo */
     }
-    .header {
-        font-size: 1.5rem;
+
+    .header-left {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .header-left img.logo {
+        height: 70px; /* Set logo size for visibility */
+        margin-bottom: 5px; /* Space between logo and brand name */
+    }
+
+    .brand-name {
+        font-size: 20px; /* Adjust font size */
         text-align: center;
+        margin: 5px 0; /* Add space between logo and brand name */
     }
-    .button {
-        width: 100%;
-        font-size: 1rem;
-        padding: 15px;
+
+    nav {
+        display: flex;
+        justify-content: space-between; /* Space out the buttons evenly */
+        gap: 10px; /* Space between nav links */
+        width: 100%; /* Ensure nav takes the full width */
+        padding: 0 20px; /* Adjust padding for better button spacing */
+        margin-top: 0; /* Minimize space between name and buttons */
     }
-    /* Adjust images and other elements */
-    img {
-        width: 100%;
-        height: auto;
+
+    nav a {
+        font-size: 14px; /* Font size for buttons */
+        color: white; /* Ensure readability */
+        text-decoration: none; /* Remove underlines */
+        padding: 5px 10px; /* Increase padding for better clickability */
+    }
+
+    .header-button-container {
+        display: none; /* Hide if unnecessary */
+    }
+
+    /* Adjust the SUV image */
+    .suv-image {
+        width: 50%; /* Make the SUV image smaller */
+        background-position: right center; /* Position the image on the right */
+        background-size: cover; /* Ensure the image covers the right part */
+        display: block; /* Ensure it's visible */
+        height: auto; /* Adjust to content height */
+        float: right; /* Align it to the right */
+    }
+
+    /* Adjust the slogan container */
+    .slogan-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        text-align: center;
+        font-size: 18px;
+        margin-top: 20px; /* Add some spacing from the header */
+        width: 50%; /* Take up the left half of the screen */
+        float: left; /* Align it to the left */
+    }
+
+    .book-button {
+        display: block;
+        width: 150px;
+        margin: 20px auto;
+        padding: 10px;
+        background-color: yellow;
+        color: black;
+        text-align: center;
+        border-radius: 5px;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    /* Ensure no horizontal overflow */
+    html, body {
+        overflow-x: hidden;
     }
 }

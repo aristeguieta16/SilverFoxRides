@@ -5,7 +5,6 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const cors = require('cors');
-const mongoose = require('mongoose');
 
 // Initialize Express
 const app = express();
@@ -13,17 +12,8 @@ const port = process.env.PORT || 3000;
 
 const reservationStore = {};
 
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('Could not connect to MongoDB:', err));
-
 // Define allowed origins
 const allowedOrigins = ['https://silverfoxrides.vip', 'https://silver-fox-rides.vercel.app'];
-
-const reservationSchema = new mongoose.Schema({
-  orderId: String,
-  reservationDetails: Object,
-});
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -126,37 +116,34 @@ app.post('/api/create-checkout', async (req, res) => {
   }
 });
 
-const Reservation = mongoose.model('Reservation', reservationSchema);
-
 // Payment confirmation endpoint
-app.post('/payment-confirmation', async (req, res) => {
+app.post('/payment-confirmation', (req, res) => {
   const event = req.body;
-  console.log('Received event:', JSON.stringify(event, null, 2));
+  console.log('Received event:', JSON.stringify(event, null, 2)); // Log full event for debugging
 
-  const eventType = event.type || event.event_type;
-  console.log('Event type:', eventType);
+  const eventType = event.type || event.event_type; 
+  console.log('Event type:', eventType); // Log event type for confirmation
 
   if (eventType === 'payment.created') {
     const paymentDetails = event.data.object.payment;
-    const orderId = paymentDetails.order_id;
 
-    // Retrieve the reservation details from MongoDB
-    const reservation = await Reservation.findOne({ orderId });
-    if (!reservation) {
-      console.error("No reservation details found for this payment.");
-      res.status(400).json({ message: "Reservation details not found." });
-      return;
+    const orderId = paymentDetails.order_id;
+    const reservationDetails = reservationStore[orderId] || {};
+    if (Object.keys(reservationDetails).length === 0) {
+        console.error("No reservation details found for this payment.");
+        res.status(400).json({ message: "Reservation details not found." });
+        return;
     }
 
     // Log reservation details for debugging
-    console.log('Reservation Details:', reservation.reservationDetails);
+    console.log('Reservation Details:', reservationDetails);
 
     // Send email notification
-    sendEmailNotification(reservation.reservationDetails);
+    sendEmailNotification(reservationDetails);
     res.status(200).json({ message: 'Payment confirmation received' });
 
-    // Optionally, delete the reservation after processing
-    await Reservation.deleteOne({ orderId });
+    // Clean up reservationStore to prevent memory leaks
+    delete reservationStore[orderId];
   } else {
     res.status(400).json({ message: 'Invalid event type' });
   }
