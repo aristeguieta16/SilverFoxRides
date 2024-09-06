@@ -594,103 +594,15 @@ form#contactForm textarea {
 }
 /* General mobile styles */
 @media (max-width: 600px) {
-    body {
-        font-size: 14px;
-    }
-    .header-left {
-        flex-direction: column;
-        align-items: center;
-    }
-    nav {
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-    }
-    .ride-choice {
-        width: 100%;
-        margin-bottom: 20px;
-    }
-    .dropdown-content {
-        width: 100%;
-        text-align: center;
-    }
-    .form-group {
-        flex-direction: column;
-    }
-    .cta-button {
-        width: 100%;
-        padding: 15px;
-    }
-    
-}
-
-form#booking-form input[type="number"] {
-    width: 100%; /* Full width of the parent container */
-    max-width: 150px; /* Adjusted max width to make it smaller and more symmetrical */
-    padding: 15px; /* Same padding as other input fields */
-    border-radius: 10px; /* Same border radius for consistency */
-    border: 1px solid #ccc; /* Consistent border color */
-    font-size: 16px; /* Same font size for uniformity */
-    color: black;
-    margin-bottom: 20px; /* Space between input fields */
-    text-align: center; /* Center the text inside the input */
-}
-
-form#booking-form input[type="number"]::placeholder {
-    color: #B0B0B0;
-}
-.passengers-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 5px; /* Further reduced the margin */
-    margin-bottom: 5px;
-}
-
-/* Adjust the spacing between each form group */
-.form-group {
-    display: flex;
-    justify-content: center;
-    margin: 5px 0; /* Reduced to bring the inputs closer together */
-}
-
-/* Aligning and reducing the space between input fields */
-.form-group input {
-    margin: 3px 0; /* Tighter spacing between the individual inputs */
-    padding: 10px;
-}
-
-/* If needed, further adjust the top padding for the booking section */
-.booking-form-section {
-    padding: 50px 20px; /* Slightly reduced padding at the top */
-}
-.ride-choice {
-    margin-bottom: -20px; /* Reduce the space below the ride choice button */
-}
-
-.passengers-container input {
-    max-width: 150px; /* Keep the width consistent */
-    margin-bottom: 10px; /* Further tighten the gap below the passengers box */
-}
-
-/* Reduce overall margin between inputs to create a more grouped effect */
-.form-group input {
-    padding: 10px;
-    margin: 5px 0;
-    max-width: 300px; /* Keep all inputs uniformly sized */
-}
-
-/* Mobile styles for header */
-@media (max-width: 600px) {
     header {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 10px 0; /* Adjust padding */
+        padding: 10px 0; 
         background-color: black;
         width: 100%;
         box-sizing: border-box;
-        min-height: 140px; /* Ensure enough height for the logo */
     }
 
     .header-left {
@@ -702,75 +614,129 @@ form#booking-form input[type="number"]::placeholder {
     }
 
     .header-left img.logo {
-        height: 70px; /* Set logo size for visibility */
-        margin-bottom: 5px; /* Space between logo and brand name */
+        height: 70px; 
+        margin-bottom: 5px; 
     }
 
     .brand-name {
-        font-size: 20px; /* Adjust font size */
+        font-size: 20px; 
         text-align: center;
-        margin: 5px 0; /* Add space between logo and brand name */
+        margin: 5px 0;
     }
 
     nav {
         display: flex;
-        justify-content: space-between; /* Space out the buttons evenly */
-        gap: 10px; /* Space between nav links */
-        width: 100%; /* Ensure nav takes the full width */
-        padding: 0 20px; /* Adjust padding for better button spacing */
-        margin-top: 0; /* Minimize space between name and buttons */
+        justify-content: center; 
+        gap: 10px; 
+        width: 100%;
+        padding: 0 20px;
+        margin-top: 0; 
     }
 
     nav a {
-        font-size: 14px; /* Font size for buttons */
-        color: white; /* Ensure readability */
-        text-decoration: none; /* Remove underlines */
-        padding: 5px 10px; /* Increase padding for better clickability */
+        font-size: 14px; 
+        color: white; 
+        text-decoration: none;
+        padding: 5px 10px; 
     }
 
     .header-button-container {
-        display: none; /* Hide if unnecessary */
+        display: none; 
     }
 
-    /* Adjust the SUV image */
-    .suv-image {
-        width: 50%; /* Make the SUV image smaller */
-        background-position: right center; /* Position the image on the right */
-        background-size: cover; /* Ensure the image covers the right part */
-        display: block; /* Ensure it's visible */
-        height: auto; /* Adjust to content height */
-        float: right; /* Align it to the right */
-    }
-
-    /* Adjust the slogan container */
-    .slogan-container {
+    .hero {
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
-        padding: 10px;
+        padding: 20px;
         text-align: center;
-        font-size: 18px;
-        margin-top: 20px; /* Add some spacing from the header */
-        width: 50%; /* Take up the left half of the screen */
-        float: left; /* Align it to the left */
+        position: relative;
+        overflow: hidden;
     }
 
-    .book-button {
-        display: block;
-        width: 150px;
-        margin: 20px auto;
-        padding: 10px;
+    .hero-text {
+        max-width: 60%; /* Allow more space for text */
+        margin-left: -40%; /* Move text to the left */
+        padding-top: 20px; /* Align with SUV */
+        z-index: -0.9;
+        font-family: 'Montserrat', sans-serif;
+        text-align: left; /* Align text to the left */
+    }
+    
+    .hero-text h2 {
+        font-size: 50px; /* Match design size */
+        line-height: 1.2;
+        margin-bottom: 10px; /* Space below heading */
+    }
+    
+    .hero-text p {
+        font-size: 14px;
+        margin-bottom: 20px; /* Spacing below paragraph */
+    }
+
+    .cta-button {
         background-color: yellow;
         color: black;
-        text-align: center;
-        border-radius: 5px;
-        font-weight: bold;
+        padding: 10px 40px;
         text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 30px;
+        font-family: 'Montserrat', sans-serif;
+        margin-top: 20px;
     }
+
+    .hero-image {
+        position: absolute;
+        right: -10px; /* Slightly move to the left */
+        bottom: 0;
+        z-index: 1;
+        width: 60%; /* Increase width for a larger SUV */
+        max-width: 450px; /* Increase the max width */
+        height: auto;
+        transform: translateX(0); /* Adjust centering */
+    }
+
+    .hero-image img {
+        max-width: 550px; /* Adjust size */
+        height: auto;
+        right: 0;
+        bottom: -20px; /* Slightly lower position */
+    }    
 
     /* Ensure no horizontal overflow */
     html, body {
         overflow-x: hidden;
     }
+
+    @media (max-width: 600px) {
+        form#booking-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%; /* Responsive width */
+            margin: 0 auto; /* Center form */
+        }
+    
+        form#booking-form input,
+        form#booking-form select {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px; /* Ensure touch-friendly sizes */
+            margin: 5px 0; /* Consistent spacing */
+            font-size: 16px; /* Easy to read and click */
+        }
+    
+        form#booking-form input[type="number"] {
+            text-align: center; /* Align text center for better readability */
+        }
+    
+        .cta-button {
+            width: 100%;
+            max-width: 300px;
+            padding: 15px;
+            margin-top: 15px; /* Adjust spacing */
+        }
+    }
+    
 }
