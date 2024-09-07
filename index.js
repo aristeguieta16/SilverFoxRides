@@ -5,6 +5,7 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 const cors = require('cors');
+const { Vonage } = require('@vonage/server-sdk');
 
 // Initialize Express
 const app = express();
@@ -53,6 +54,30 @@ const client = new Client({
   accessToken: process.env.SQUARE_ACCESS_TOKEN,
   environment: Environment.Production,
 });
+
+// Initialize Vonage client
+const vonage = new Vonage({
+  apiKey: process.env.VONAGE_API_KEY,
+  apiSecret: process.env.VONAGE_API_SECRET,
+});
+
+function sendSMSNotification(reservationDetails) {
+  const from = process.env.VONAGE_PHONE_NUMBER;  // Your Vonage phone number
+  const to = process.env.NOTIFICATION_PHONE;  // The number you want to send the SMS to
+  const text = `New Reservation: ${reservationDetails.customerFirstName} ${reservationDetails.customerLastName} - Pickup: ${reservationDetails.pickupLocation} at ${reservationDetails.pickupDate} ${reservationDetails.pickupTime}`;
+
+  vonage.sms.send({ to, from, text }, (err, responseData) => {
+    if (err) {
+      console.error('Error sending SMS:', err);
+    } else {
+      if (responseData.messages[0].status === "0") {
+        console.log('SMS sent successfully:', responseData);
+      } else {
+        console.error('Failed to send SMS:', responseData.messages[0]['error-text']);
+      }
+    }
+  });
+}
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
@@ -141,6 +166,9 @@ app.post('/payment-confirmation', (req, res) => {
     // Send email notification
     sendEmailNotification(reservationDetails);
     res.status(200).json({ message: 'Payment confirmation received' });
+
+    // Send SMS notification
+    sendSMSNotification(reservationDetails);
 
     // Clean up reservationStore to prevent memory leaks
     delete reservationStore[orderId];
