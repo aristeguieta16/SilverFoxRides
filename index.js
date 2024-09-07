@@ -97,11 +97,21 @@ app.get('/thank-you.html', (req, res) => {
 app.post('/api/create-checkout', async (req, res) => {
   const { price, idempotencyKey, reservationDetails } = req.body;
 
+  // Log incoming request data for debugging
+  console.log('Received request to create checkout:', {
+    price,
+    idempotencyKey,
+    reservationDetails,
+  });
+
+  // Validate required fields
   if (!price || !idempotencyKey || !reservationDetails) {
+    console.error('Missing required fields:', { price, idempotencyKey, reservationDetails });
     return res.status(400).json({ error: 'Missing required fields: price, idempotencyKey, or reservationDetails' });
   }
 
   try {
+    // Define the order with location and line item details
     const order = {
       locationId: process.env.SQUARE_LOCATION_ID,
       lineItems: [
@@ -109,34 +119,46 @@ app.post('/api/create-checkout', async (req, res) => {
           name: "Ride Booking",
           quantity: "1",
           basePriceMoney: {
-            amount: Number(Math.round(price * 100)), // Convert to Number to avoid BigInt issue
+            amount: Number(Math.round(price * 100)), // Convert to cents
             currency: "USD",
           },
         },
       ],
     };
 
+    // Build the checkout body with idempotency key and order
     const checkoutBody = {
       idempotencyKey: idempotencyKey,
       order: order,
     };
 
+    // Call Square API to create a payment link
     const checkoutResponse = await client.checkoutApi.createPaymentLink(checkoutBody);
     const checkoutUrl = checkoutResponse.result.paymentLink.url;
     const orderId = checkoutResponse.result.paymentLink.orderId;
 
+    // Log the generated order ID and checkout URL
+    console.log('Checkout created successfully:', { checkoutUrl, orderId });
+
+    // Store reservation details in the reservationStore with the order ID as the key
     reservationStore[orderId] = reservationDetails;
+
+    // Log the current state of reservationStore to confirm data is stored
+    console.log('Updated reservation store:', reservationStore);
+
+    // Respond with the checkout URL to the client
     res.json({ checkoutUrl: checkoutUrl });
 
   } catch (error) {
+    // Log detailed error information for debugging
     console.error('Square API Error:', error.message);
-    
     if (error.response && error.response.data) {
       console.error('Square API Response Data:', JSON.stringify(error.response.data, null, 2));
     } else {
       console.error('Full Error Object:', error);
     }
 
+    // Respond with an error status if checkout creation fails
     res.status(500).json({ error: 'Error creating checkout. Please try again later.' });
   }
 });
