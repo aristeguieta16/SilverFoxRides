@@ -92,8 +92,6 @@ app.get('/thank-you.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'thank-you.html'));
 });
 
-// Create checkout endpoint
-// Enhanced error logging for create-checkout endpoint
 app.post('/api/create-checkout', async (req, res) => {
   const { price, idempotencyKey, reservationDetails } = req.body;
 
@@ -137,14 +135,13 @@ app.post('/api/create-checkout', async (req, res) => {
     const checkoutUrl = checkoutResponse.result.paymentLink.url;
     const orderId = checkoutResponse.result.paymentLink.orderId;
 
-    // Log the generated order ID and checkout URL
-    console.log('Checkout created successfully:', { checkoutUrl, orderId });
-
-    // Store reservation details in the reservationStore with the order ID as the key
-    reservationStore[orderId] = reservationDetails;
-
-    // Log the current state of reservationStore to confirm data is stored
-    console.log('Updated reservation store:', reservationStore);
+    // Verify orderId and reservationDetails are correct before storing
+    if (orderId && reservationDetails) {
+      reservationStore[orderId] = reservationDetails;
+      console.log('Stored reservation details:', { orderId, reservationDetails });
+    } else {
+      console.error('Failed to store reservation details due to missing orderId or reservation details.');
+    }
 
     // Respond with the checkout URL to the client
     res.json({ checkoutUrl: checkoutUrl });
@@ -163,7 +160,6 @@ app.post('/api/create-checkout', async (req, res) => {
   }
 });
 
-// Payment confirmation endpoint
 app.post('/api/payment-confirmation', (req, res) => {
   const event = req.body;
   console.log('Received event:', JSON.stringify(event, null, 2)); // Log full event for debugging
@@ -173,17 +169,20 @@ app.post('/api/payment-confirmation', (req, res) => {
 
   if (eventType === 'payment.created') {
     const paymentDetails = event.data.object.payment;
-
     const orderId = paymentDetails.order_id;
-    const reservationDetails = reservationStore[orderId] || {};
-    if (Object.keys(reservationDetails).length === 0) {
-        console.error("No reservation details found for this payment.");
-        res.status(400).json({ message: "Reservation details not found." });
-        return;
+
+    console.log('Received orderId:', orderId);
+    console.log('Current reservation store:', reservationStore);
+
+    // Check if orderId exists in reservationStore
+    if (!orderId || !reservationStore[orderId]) {
+      console.error(`No reservation details found for this payment with orderId: ${orderId}`);
+      res.status(400).json({ message: "Reservation details not found." });
+      return;
     }
 
-    // Log reservation details for debugging
-    console.log('Reservation Details:', reservationDetails);
+    const reservationDetails = reservationStore[orderId];
+    console.log('Found reservation details:', reservationDetails);
 
     // Send email notification
     sendEmailNotification(reservationDetails);
