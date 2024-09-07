@@ -142,7 +142,7 @@ app.post('/api/create-checkout', async (req, res) => {
 });
 
 // Payment confirmation endpoint
-app.post('/payment-confirmation', (req, res) => {
+app.post('/api/payment-confirmation', (req, res) => {
   const event = req.body;
   console.log('Received event:', JSON.stringify(event, null, 2)); // Log full event for debugging
 
