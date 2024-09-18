@@ -626,6 +626,33 @@ form#contactForm textarea {
 .send-message-button:hover {
     background-color: #FFD700;
 }
+
+footer {
+    background-color: black;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.footer-link {
+    color: yellow;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.footer-link:hover {
+    text-decoration: underline;
+}
+
 /* General mobile styles */
 @media (max-width: 600px) {
     header {
