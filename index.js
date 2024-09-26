@@ -17,18 +17,18 @@ const reservationStore = {};
 const allowedOrigins = ['https://silverfoxrides.vip', 'https://silver-fox-rides.vercel.app'];
 
 app.use(cors({
-  origin: (origin, callback) => {
-    console.log(`Incoming request from origin: ${origin}`);
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.error(`CORS error: Origin ${origin} not allowed`);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-  credentials: true,
-}));
+    origin: (origin, callback) => {
+      console.log(`Incoming request from origin: ${origin}`);
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.error(`CORS error: Origin ${origin} not allowed`);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    credentials: true,
+  }));  
 
 // Explicitly handle OPTIONS method for all routes to handle preflight requests
 app.options('*', (req, res) => {
@@ -50,7 +50,7 @@ app.use((req, res, next) => {
       res.setHeader('Access-Control-Allow-Credentials', 'true');
     }
     next();
-  });
+  });  
 
 // Initialize Square client
 const client = new Client({
