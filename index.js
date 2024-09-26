@@ -17,18 +17,18 @@ const reservationStore = {};
 const allowedOrigins = ['https://silverfoxrides.vip', 'https://silver-fox-rides.vercel.app'];
 
 app.use(cors({
-  origin: (origin, callback) => {
-    console.log(`Incoming request from origin: ${origin}`);
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.error(`CORS error: Origin ${origin} not allowed`);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-  credentials: true,
-}));
+    origin: (origin, callback) => {
+      console.log(`Incoming request from origin: ${origin}`);
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.error(`CORS error: Origin ${origin} not allowed`);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    credentials: true,
+  }));  
 
 // Explicitly handle OPTIONS method for all routes to handle preflight requests
 app.options('*', (req, res) => {
@@ -147,17 +147,14 @@ app.post('/api/create-checkout', async (req, res) => {
     res.json({ checkoutUrl: checkoutUrl });
 
   } catch (error) {
-    // Log detailed error information for debugging
     console.error('Square API Error:', error.message);
     if (error.response && error.response.data) {
       console.error('Square API Response Data:', JSON.stringify(error.response.data, null, 2));
     } else {
       console.error('Full Error Object:', error);
     }
-
-    // Respond with an error status if checkout creation fails
     res.status(500).json({ error: 'Error creating checkout. Please try again later.' });
-  }
+  }  
 });
 
 app.post('/api/payment-confirmation', (req, res) => {
