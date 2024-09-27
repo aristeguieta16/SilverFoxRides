@@ -99,7 +99,7 @@ app.post('/api/payment-confirmation', bodyParser.raw({ type: 'application/json' 
 
             // Send notifications here (email/SMS)
             console.log('Payment successful!', reservationDetails);
-            sendEmailNotification(reservationDetails);
+            sendEmailNotification(reservationDetails );
             sendSMSNotification(reservationDetails);
         }
 
