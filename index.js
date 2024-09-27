@@ -124,7 +124,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // Function to send email notifications
-function sendEmail Notification(reservationDetails) {
+function sendEmailNotification(reservationDetails) {
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: process.env.NOTIFICATION_EMAIL,
