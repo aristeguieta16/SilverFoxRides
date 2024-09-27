@@ -18,8 +18,10 @@ const reservationStore = {};
 
 const allowedOrigins = ['https://silverfoxrides.vip', 'https://silver-fox-rides.vercel.app'];
 
+// CORS configuration
 app.use(cors({
   origin: (origin, callback) => {
+      // Allow requests with no origin, like mobile apps or curl requests
       if (!origin || allowedOrigins.includes(origin)) {
           callback(null, true);
       } else {
@@ -34,12 +36,13 @@ app.use(cors({
 
 // Explicitly handle OPTIONS method for all routes to handle preflight requests
 app.options('*', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', req.headers.origin); // Echo the origin
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin); // Echo the origin back
   res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With'); // Include necessary headers
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With'); // Include headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(200);
+  res.sendStatus(200); // Respond to OPTIONS requests
 });
+
 
 // Middleware to set CORS headers for each request
 app.use((req, res, next) => {
