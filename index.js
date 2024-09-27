@@ -11,6 +11,8 @@ const { Vonage } = require('@vonage/server-sdk');
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(cors());
+
 const reservationStore = {};
 
 // Initialize Stripe
