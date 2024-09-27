@@ -16,50 +16,19 @@ const reservationStore = {};
 // Initialize Stripe
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-const allowedOrigins = [
-  "https://silverfoxrides.vip",
-  "https://www.silverfoxrides.vip",
-  "https://silver-fox-rides.vercel.app"
-];
-
-
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (e.g., mobile apps or curl requests)
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      console.error(`CORS error: Origin ${origin} not allowed`);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  credentials: true,
-}));
-
-app.options('*', (req, res) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.sendStatus(204); // No content
-  } else {
-    res.sendStatus(403); // Forbidden
-  }
-});
+const corsOptions = {
+  origin: ['https://www.silverfoxrides.vip', 'https://silverfoxrides.vip'],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  allowedHeaders: 'Content-Type, Authorization, X-Requested-With',
+  credentials: true
+};
 
 app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-      res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-      res.setHeader('Access-Control-Allow-Credentials', 'true');
+  if (req.headers.host === 'silverfoxrides.vip' && !req.url.startsWith('https://www.silverfoxrides.vip')) {
+    res.redirect(301, `https://www.silverfoxrides.vip${req.url}`);
+  } else {
+    cors(corsOptions)(req, res, next);
   }
-  next();
 });
 
 // Serve static files
@@ -79,39 +48,40 @@ app.get('/thank-you.html', (req, res) => {
 });
 
 // Stripe payment creation endpoint
+// Stripe payment creation endpoint
 app.post('/api/create-checkout', async (req, res) => {
-    const { price, reservationDetails } = req.body;
+  const { price, reservationDetails } = req.body;
 
-    try {
-        // Create a Stripe checkout session
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: [{
-                price_data: {
-                    currency: 'usd',
-                    product_data: {
-                        name: 'Ride Booking',
-                    },
-                    unit_amount: Math.round(price * 100), // Stripe expects the amount in cents
-                },
-                quantity: 1,
-            }],
-            mode: 'payment',
-            success_url: 'https://silverfoxrides.vip/thank-you.html',
-            cancel_url: 'https://silverfoxrides.vip/book.html',
-            metadata: {
-                reservationDetails: JSON.stringify(reservationDetails),
-            },
-        });
+  try {
+      // Create a Stripe checkout session
+      const session = await stripe.checkout.sessions.create({
+          payment_method_types: ['card'],
+          line_items: [{
+              price_data: {
+                  currency: 'usd',
+                  product_data: {
+                      name: 'Ride Booking',
+                  },
+                  unit_amount: Math.round(price * 100), // Stripe expects the amount in cents
+              },
+              quantity: 1,
+          }],
+          mode: 'payment',
+          success_url: 'https://www.silverfoxrides.vip/thank-you.html',
+          cancel_url: 'https://www.silverfoxrides.vip/book.html',
+          metadata: {
+              reservationDetails: JSON.stringify(reservationDetails),
+          },
+      });
 
-        // Store the reservation details
-        reservationStore[session.id] = reservationDetails;
+      // Store the reservation details
+      reservationStore[session.id] = reservationDetails;
 
-        res.json({ checkoutUrl: session.url });
-    } catch (error) {
-        console.error('Error creating Stripe checkout session:', error.message);
-        res.status(500).json({ error: 'Error creating checkout. Please try again later.' });
-    }
+      res.json({ checkoutUrl: session.url });
+  } catch (error) {
+      console.error('Error creating Stripe checkout session:', error.message);
+      res.status(500).json({ error: 'Error creating checkout. Please try again later.' });
+  }
 });
 
 // Stripe webhook to handle payment confirmations
@@ -201,4 +171,6 @@ function sendSMSNotification(reservationDetails) {
 }
 
 // Start the server
-app.listen(port, () => console.log(`Server running on port ${port}`));
+app.listen(port, () => console.log(`Server running on port ${port}`)).on('error', (err) => {
+  console.error('Error starting server:', err);
+});
