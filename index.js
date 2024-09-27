@@ -28,7 +28,7 @@ app.use(cors({
       }
   },
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'], // Ensure this line is present
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'], // Add necessary headers
   credentials: true,
 }));
 
@@ -36,7 +36,7 @@ app.use(cors({
 app.options('*', (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', req.headers.origin); // Echo the origin
   res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Add headers here
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With'); // Include necessary headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.sendStatus(200);
 });

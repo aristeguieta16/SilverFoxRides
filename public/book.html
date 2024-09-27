@@ -226,13 +226,14 @@
         fetch('https://silverfoxrides.vip/api/create-checkout', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 price: price,
                 idempotencyKey: uuidv4(),
                 reservationDetails: reservationDetails
-            })
+            }),
+            credentials: 'include', // Ensure credentials (cookies, etc.) are sent with the request
         })
         .then(response => response.json())
         .then(data => {
@@ -246,6 +247,7 @@
             console.error('Error in Stripe Checkout:', error);
             alert('An error occurred while processing your payment. Please try again.');
         });
+
     }
 
         function calculateDistance(origins, destinations, callback) {
