@@ -19,26 +19,26 @@ const reservationStore = {};
 const allowedOrigins = ['https://silverfoxrides.vip', 'https://silver-fox-rides.vercel.app'];
 
 app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            console.error(`CORS error: Origin ${origin} not allowed`);
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'], // Add this line
-    credentials: true,
+  origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+      } else {
+          console.error(`CORS error: Origin ${origin} not allowed`);
+          callback(new Error('Not allowed by CORS'));
+      }
+  },
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'], // Ensure this line is present
+  credentials: true,
 }));
 
 // Explicitly handle OPTIONS method for all routes to handle preflight requests
 app.options('*', (req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', req.headers.origin); // Echo the origin
-    res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Add headers here
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.sendStatus(200);
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin); // Echo the origin
+  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Add headers here
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(200);
 });
 
 // Middleware to set CORS headers for each request
