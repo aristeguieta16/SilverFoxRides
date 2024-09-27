@@ -11,6 +11,8 @@ const { Vonage } = require('@vonage/server-sdk');
 const app = express();
 const port = process.env.PORT || 3000;
 
+const reservationStore = {};
+
 // Initialize Stripe
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -20,6 +22,7 @@ const allowedOrigins = ['https://silverfoxrides.vip', 'https://silver-fox-rides.
 // CORS configuration
 app.use(cors({
     origin: (origin, callback) => {
+        // Allow requests with no origin (e.g., mobile apps or curl requests)
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
@@ -28,11 +31,11 @@ app.use(cors({
         }
     },
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'], 
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
     credentials: true,
 }));
 
-// Handle OPTIONS preflight requests explicitly
+// Handle OPTIONS preflight requests
 app.options('*', (req, res) => {
     const origin = req.headers.origin;
     if (allowedOrigins.includes(origin)) {
@@ -40,31 +43,28 @@ app.options('*', (req, res) => {
         res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
         res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
         res.setHeader('Access-Control-Allow-Credentials', 'true');
-        res.sendStatus(200);
-        return; // Explicitly return to prevent further processing
+        res.sendStatus(204); // No content
     } else {
-        res.sendStatus(403); // Forbidden for unallowed origins
-        return; // Explicitly return to prevent further processing
+        res.sendStatus(403); // Forbidden
     }
 });
 
-// Middleware to set CORS headers for each request
 app.use((req, res, next) => {
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-        res.setHeader('Access-Control-Allow-Origin', origin);
-        res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-        res.setHeader('Access-Control-Allow-Credentials', 'true');
-    }
-    next();
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+  }
+  next();
 });
-
-// Middleware for parsing JSON
-app.use(express.json());
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Middleware to parse JSON
+app.use(express.json());
 
 // Route for the main page
 app.get('/', (req, res) => {
@@ -90,13 +90,13 @@ app.post('/api/create-checkout', async (req, res) => {
                     product_data: {
                         name: 'Ride Booking',
                     },
-                    unit_amount: Math.round(price * 100),  // Stripe expects the amount in cents
+                    unit_amount: Math.round(price * 100), // Stripe expects the amount in cents
                 },
                 quantity: 1,
             }],
             mode: 'payment',
             success_url: 'https://silverfoxrides.vip/thank-you.html',
-            cancel_url: 'https://silverfoxrides.vip/cancel.html',
+            cancel_url: 'https://silverfoxrides.vip/book.html',
             metadata: {
                 reservationDetails: JSON.stringify(reservationDetails),
             },
@@ -115,11 +115,11 @@ app.post('/api/create-checkout', async (req, res) => {
 // Stripe webhook to handle payment confirmations
 app.post('/api/payment-confirmation', bodyParser.raw({ type: 'application/json' }), (req, res) => {
     const sig = req.headers['stripe-signature'];
-    console.log('Received Stripe Signature:', sig);  // Log the signature for debugging
+    console.log('Received Stripe Signature:', sig); // Log the signature for debugging
 
     try {
         const event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
-        console.log('Constructed Event:', event);  // Log the event details for debugging
+        console.log('Constructed Event:', event); // Log the event details for debugging
         
         if (event.type === 'checkout.session.completed') {
             const session = event.data.object;
@@ -149,11 +149,11 @@ const transporter = nodemailer.createTransport({
 
 // Function to send email notifications
 function sendEmailNotification(reservationDetails) {
-  const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: process.env.NOTIFICATION_EMAIL,
-      subject: 'New SilverFox Reservation!!',
-      text: `Reservation Details:
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: process.env.NOTIFICATION_EMAIL,
+        subject: 'New SilverFox Reservation!!',
+        text: `Reservation Details:
 First Name: ${reservationDetails.customerFirstName}
 Last Name: ${reservationDetails.customerLastName}
 Phone Number: ${reservationDetails.customerPhoneNumber}
@@ -162,15 +162,15 @@ Dropoff Location: ${reservationDetails.dropoffLocation}
 Pickup Date: ${reservationDetails.pickupDate}
 Pickup Time: ${reservationDetails.pickupTime}
 Customer Email: ${reservationDetails.customerEmail}`,
-  };
+    };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-          console.error('Error sending email:', error); // Log detailed error
-      } else {
-          console.log('Email sent:', info.response); // Log the success response
-      }
-  });
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error('Error sending email:', error); // Log detailed error
+        } else {
+            console.log('Email sent:', info.response); // Log the success response
+        }
+    });
 }
 
 // Initialize Vonage client
@@ -181,8 +181,8 @@ const vonage = new Vonage({
 
 // Function to send SMS notifications
 function sendSMSNotification(reservationDetails) {
-    const from = process.env.VONAGE_PHONE_NUMBER;  // Your Vonage phone number
-    const to = process.env.NOTIFICATION_PHONE;  // The number you want to send the SMS to
+    const from = process.env.VONAGE_PHONE_NUMBER;
+    const to = process.env.NOTIFICATION_PHONE;
     const text = `New Reservation: ${reservationDetails.customerFirstName} ${reservationDetails.customerLastName} - Pickup: ${reservationDetails.pickupLocation} at ${reservationDetails.pickupDate} ${reservationDetails.pickupTime}`;
 
     vonage.sms.send({ to, from, text }, (err, responseData) => {
