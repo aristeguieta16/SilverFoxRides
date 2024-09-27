@@ -1,6 +1,6 @@
 const express = require('express');
-const Stripe = require('stripe');  // Import Stripe
-const bodyParser = require('body-parser');  // Import bodyParser
+const Stripe = require('stripe'); 
+const bodyParser = require('body-parser'); 
 const path = require('path');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
@@ -12,52 +12,56 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Initialize Stripe
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY);  // Your Stripe secret key
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-const reservationStore = {};
-
+// Allowed origins for CORS
 const allowedOrigins = ['https://silverfoxrides.vip', 'https://silver-fox-rides.vercel.app'];
 
 // CORS configuration
-// CORS configuration
 app.use(cors({
-  origin: (origin, callback) => {
-      // Allow requests with no origin, like mobile apps or curl requests
-      if (!origin || allowedOrigins.includes(origin)) {
-          callback(null, true);
-      } else {
-          console.error(`CORS error: Origin ${origin} not allowed`);
-          callback(new Error('Not allowed by CORS'));
-      }
-  },
-  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'], // Add necessary headers
-  credentials: true,
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.error(`CORS error: Origin ${origin} not allowed`);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'], 
+    credentials: true,
 }));
 
-// Explicitly handle OPTIONS method for all routes to handle preflight requests
+// Handle OPTIONS preflight requests explicitly
 app.options('*', (req, res) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin); // Echo back the origin
-      res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With'); // Include the necessary headers
-      res.setHeader('Access-Control-Allow-Credentials', 'true');
-  }
-  res.sendStatus(200);
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
+        res.sendStatus(200);
+        return; // Explicitly return to prevent further processing
+    } else {
+        res.sendStatus(403); // Forbidden for unallowed origins
+        return; // Explicitly return to prevent further processing
+    }
 });
 
-// Middleware to set CORS headers for all requests
+// Middleware to set CORS headers for each request
 app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-      res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-      res.setHeader('Access-Control-Allow-Credentials', 'true');
-  }
-  next();
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
+    }
+    next();
 });
+
+// Middleware for parsing JSON
+app.use(express.json());
 
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
