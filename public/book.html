@@ -138,117 +138,115 @@
         }
 
         document.getElementById('booking-form').addEventListener('submit', function(event) {
-            event.preventDefault();
+        event.preventDefault();
 
-            const pickupLocation = document.getElementById('pickupLocation').value;
-            const dropoffLocation1 = document.getElementById('dropoffLocation1').value;
-            const dropoffLocation2 = document.getElementById('dropoffLocation2').value;
-            const pickupDate = document.getElementById('pickupDate').value;
-            const pickupTime = document.getElementById('pickupTime').value;
-            const warningMessage = document.getElementById('warning-message');
-            const rideChoice = document.getElementById('rideChoiceBtn').textContent.trim();
-            const numPassengers = parseInt(document.getElementById('numPassengers').value, 10);
+        const pickupLocation = document.getElementById('pickupLocation').value;
+        const dropoffLocation1 = document.getElementById('dropoffLocation1').value;
+        const dropoffLocation2 = document.getElementById('dropoffLocation2').value;
+        const pickupDate = document.getElementById('pickupDate').value;
+        const pickupTime = document.getElementById('pickupTime').value;
+        const warningMessage = document.getElementById('warning-message');
+        const rideChoice = document.getElementById('rideChoiceBtn').textContent.trim();
+        const numPassengers = parseInt(document.getElementById('numPassengers').value, 10);
 
-            const today = new Date().toISOString().split('T')[0];
+        const today = new Date().toISOString().split('T')[0];
 
-            if (!pickupLocation || !dropoffLocation1 || (rideChoice === "ROUND TRIP" && !dropoffLocation2)) {
-                warningMessage.textContent = "Please fill in all required locations.";
-                warningMessage.style.display = 'block';
-                return;
-            }
-            if (numPassengers > 4) {
-                alert("For parties larger than 4 passengers, please reach out to us directly.");
-                return;
-            }
+        if (!pickupLocation || !dropoffLocation1 || (rideChoice === "ROUND TRIP" && !dropoffLocation2)) {
+            warningMessage.textContent = "Please fill in all required locations.";
+            warningMessage.style.display = 'block';
+            return;
+        }
+        if (numPassengers > 4) {
+            alert("For parties larger than 4 passengers, please reach out to us directly.");
+            return;
+        }
 
-            if (pickupDate < today) {
-                warningMessage.textContent = "The selected pick-up date has already passed. Please select a valid date.";
-                warningMessage.style.display = 'block';
-                return;
-            }
+        if (pickupDate < today) {
+            warningMessage.textContent = "The selected pick-up date has already passed. Please select a valid date.";
+            warningMessage.style.display = 'block';
+            return;
+        }
 
-            if (!pickupDate || !pickupTime) {
-                warningMessage.textContent = "Please fill in all required information.";
-                warningMessage.style.display = 'block';
-                return;
-            }
+        if (!pickupDate || !pickupTime) {
+            warningMessage.textContent = "Please fill in all required information.";
+            warningMessage.style.display = 'block';
+            return;
+        }
 
-            // Hide the warning message since everything is valid
-            warningMessage.style.display = 'none';
+        // Hide the warning message since everything is valid
+        warningMessage.style.display = 'none';
 
-            // Calculate distance and price, then initiate Square checkout
-            if (rideChoice === "ONE WAY" || rideChoice === "TO AIRPORT" || rideChoice === "FROM AIRPORT") {
-                calculateDistance(pickupLocation, dropoffLocation1, function(distance) {
-                    const price = calculatePrice(distance); // Define price correctly here
-                    console.log('Calculated Price:', price); // Debug log for price
-                    createSquareCheckout(price);
-                });
-            } else if (rideChoice === "ROUND TRIP") {
-                calculateDistance(pickupLocation, dropoffLocation1, function(distance1) {
-                    if (document.getElementById('sameAsPickup').checked) {
-                        const totalDistance = distance1 * 2;
+        // Calculate distance and price, then initiate Stripe checkout
+        if (rideChoice === "ONE WAY" || rideChoice === "TO AIRPORT" || rideChoice === "FROM AIRPORT") {
+            calculateDistance(pickupLocation, dropoffLocation1, function(distance) {
+                const price = calculatePrice(distance);
+                console.log('Calculated Price:', price);
+                createStripeCheckout(price);  // Changed function name here
+            });
+        } else if (rideChoice === "ROUND TRIP") {
+            calculateDistance(pickupLocation, dropoffLocation1, function(distance1) {
+                if (document.getElementById('sameAsPickup').checked) {
+                    const totalDistance = distance1 * 2;
+                    const price = calculatePrice(totalDistance);
+                    console.log('Calculated Price for ROUND TRIP:', price);
+                    createStripeCheckout(price);  // Changed function name here
+                } else {
+                    calculateDistance(dropoffLocation1, dropoffLocation2, function(distance2) {
+                        const totalDistance = distance1 + distance2;
                         const price = calculatePrice(totalDistance);
-                        console.log('Calculated Price for ROUND TRIP:', price); // Debug log for price
-                        createSquareCheckout(price);
-                    } else {
-                        calculateDistance(dropoffLocation1, dropoffLocation2, function(distance2) {
-                            const totalDistance = distance1 + distance2;
-                            const price = calculatePrice(totalDistance);
-                            console.log('Calculated Price for multiple stops:', price); // Debug log for price
-                            createSquareCheckout(price);
-                        });
-                    }
-                });
-            }
-        });
-
-        function uuidv4() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
+                        console.log('Calculated Price for multiple stops:', price);
+                        createStripeCheckout(price);  // Changed function name here
+                    });
+                }
             });
         }
+    });
 
-        function createSquareCheckout(price) {
-            console.log("Starting Square Checkout with price:", price);
+    function uuidv4() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
 
-            const reservationDetails = {
-                pickupLocation: document.getElementById('pickupLocation').value,
-                dropoffLocation: document.getElementById('dropoffLocation1').value,
-                pickupDate: document.getElementById('pickupDate').value,
-                pickupTime: document.getElementById('pickupTime').value,
-                customerFirstName: document.getElementById('firstName').value,
-                customerLastName: document.getElementById('lastName').value,
-                customerPhoneNumber: document.getElementById('phoneNumber').value,
-                customerEmail: "customer@example.com" // Replace with actual customer email if available
-            };
+    function createStripeCheckout(price) {  // Changed function name here
+        console.log("Starting Stripe Checkout with price:", price);  // Updated log statement
 
-            fetch('https://silverfoxrides.vip/api/create-checkout', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    price: price,
-                    idempotencyKey: uuidv4(),
-                    reservationDetails: reservationDetails
-                })
-                })
-                .then(response => response.json())
-                .then(data => {
-                if (data.checkoutUrl) {
-                    window.location.href = data.checkoutUrl;
-                } else {
-                    alert('An error occurred during the payment process.');
-                }
-                })
-                .catch(error => {
-                console.error('Error in Square Checkout:', error);
-                alert('An error occurred while processing your payment. Please try again.');
-                });
+        const reservationDetails = {
+            pickupLocation: document.getElementById('pickupLocation').value,
+            dropoffLocation: document.getElementById('dropoffLocation1').value,
+            pickupDate: document.getElementById('pickupDate').value,
+            pickupTime: document.getElementById('pickupTime').value,
+            customerFirstName: document.getElementById('firstName').value,
+            customerLastName: document.getElementById('lastName').value,
+            customerPhoneNumber: document.getElementById('phoneNumber').value,
+            customerEmail: "customer@example.com" // Replace with actual customer email if available
+        };
 
-
-        }
+        fetch('https://silverfoxrides.vip/api/create-checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                price: price,
+                idempotencyKey: uuidv4(),
+                reservationDetails: reservationDetails
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.checkoutUrl) {
+                window.location.href = data.checkoutUrl;
+            } else {
+                alert('An error occurred during the payment process.');
+            }
+        })
+        .catch(error => {
+            console.error('Error in Stripe Checkout:', error);
+            alert('An error occurred while processing your payment. Please try again.');
+        });
+    }
 
         function calculateDistance(origins, destinations, callback) {
             const service = new google.maps.DistanceMatrixService();
