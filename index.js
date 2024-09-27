@@ -17,7 +17,11 @@ const reservationStore = {};
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Allowed origins for CORS
-const allowedOrigins = ['https://silverfoxrides.vip', 'https://silver-fox-rides.vercel.app'];
+const allowedOrigins = [
+  'https://silverfoxrides.vip',
+  'https://www.silverfoxrides.vip',
+  'https://silver-fox-rides.vercel.app'
+];
 
 // CORS configuration
 app.use(cors({
