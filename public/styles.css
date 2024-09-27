@@ -506,6 +506,35 @@ form#booking-form input[type="time"]::placeholder {
     text-align: center;
 }
 
+input[type="date"], input[type="time"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+input[type="date"]:focus, input[type="time"]:focus {
+    border-color: #aaa;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.booking-form-section input[type="date"],
+.booking-form-section input[type="time"] {
+    width: 100%;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    color: black;
+    box-sizing: border-box;
+}
+
+.booking-form-section input[type="date"]::placeholder,
+.booking-form-section input[type="time"]::placeholder {
+    color: #B0B0B0;
+}
+
 .cta-button:hover {
     background-color: #FFD700;
 }
