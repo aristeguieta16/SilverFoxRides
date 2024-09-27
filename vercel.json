@@ -23,18 +23,5 @@
       "src": "/(.*)",
       "dest": "/public/$1"
     }
-  ],
-  "redirects": [
-    {
-      "source": "/api/(.*)",
-      "destination": "https://www.silverfoxrides.vip/api/$1",
-      "statusCode": 307,
-      "headers": {
-        "Access-Control-Allow-Origin": "https://www.silverfoxrides.vip",
-        "Access-Control-Allow-Methods": "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With",
-        "Access-Control-Allow-Credentials": "true"
-      }
-    }
   ]
 }
