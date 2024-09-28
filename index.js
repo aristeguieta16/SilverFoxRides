@@ -29,15 +29,15 @@ const corsOptions = {
 };
 
 app.use((req, res, next) => {
-  if (req.headers.host === 'silverfoxrides.vip' && !req.url.startsWith('https://www.silverfoxrides.vip')) {
-    res.setHeader('Access-Control-Allow-Origin', 'https://www.silverfoxrides.vip');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.redirect(301, `https://www.silverfoxrides.vip${req.url}`);
-  } else {
-    cors(corsOptions)(req, res, next);
-  }
+//   if (req.headers.host === 'silverfoxrides.vip' && !req.url.startsWith('https://www.silverfoxrides.vip')) {
+//     res.setHeader('Access-Control-Allow-Origin', 'https://www.silverfoxrides.vip');
+//     res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+//     res.setHeader('Access-Control-Allow-Credentials', 'true');
+//     res.redirect(301, `https://www.silverfoxrides.vip${req.url}`);
+//   } else {
+//     //cors(corsOptions)(req, res, next);
+//   }
 });
 
 // Serve static files
