@@ -121,7 +121,7 @@ app.post('/api/payment-confirmation', bodyParser.raw({ type: 'application/json' 
 
 // Set up Nodemailer transporter
 const transporter = nodemailer.createTransport({
-    service: 'Gmail',
+    service: 'gmail',
     host: "smtp.gmail.com",
     port: 465, 
     secure: false,
