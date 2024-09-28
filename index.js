@@ -95,12 +95,15 @@ app.post('/api/create-checkout', async (req, res) => {
 });
 
 // Stripe webhook to handle payment confirmations
-app.post('/api/payment-confirmation', bodyParser.raw({ type: 'application/json' }), (req, res) => {
+app.post('/api/payment-confirmation', bodyParser.raw({ type: 'application/json' }), async (req, res) => {
     const sig = req.headers['stripe-signature'];
     console.log('Received Stripe Signature:', sig); // Log the signature for debugging
     console.log("Req",req,  req.rawBody)
+    let res1 = '';
+    let res2 = '';
     try {
-        const event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
+       // const event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
+       const event = req.body
         console.log('Constructed Event:', event); // Log the event details for debugging
         
         if (event.type === 'checkout.session.completed') {
@@ -109,11 +112,11 @@ app.post('/api/payment-confirmation', bodyParser.raw({ type: 'application/json' 
 
             // Send notifications here (email/SMS)
             console.log('Payment successful!', reservationDetails);
-            sendEmailNotification(reservationDetails );
-            sendSMSNotification(reservationDetails);
+            res1 = await sendEmailNotification(reservationDetails );
+            res2 = await sendSMSNotification(reservationDetails);
         }
 
-        res.status(200).send({ received: true });
+        res.status(200).send({ received: true, res1, res2 });
     } catch (error) {
         console.error(`Webhook Error: ${error.message}`);
         res.status(400).send(`Webhook Error: ${error.message}`);
@@ -136,7 +139,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // Function to send email notifications
-function sendEmailNotification(reservationDetails) {
+async function sendEmailNotification(reservationDetails) {
     //     const mailOptions = {
     //         from: process.env.EMAIL_USER,
     //         to: process.env.NOTIFICATION_EMAIL,
@@ -184,11 +187,9 @@ function sendEmailNotification(reservationDetails) {
     { "email": process.env.NOTIFICATION_EMAIL, "name": reservationDetails.customerFirstName }
     ];
 
-    apiInstance.sendTransacEmail(sendSmtpEmail).then(function (data) {
-        console.log('API called successfully. Returned data: ' + JSON.stringify(data));
-    }, function (error) {
-        console.error(error);
-    });
+    const data = await apiInstance.sendTransacEmail(sendSmtpEmail)
+    console.log('API called successfully. Returned data: ' + JSON.stringify(data));
+    return data;
 }
 
 // Initialize Vonage client
