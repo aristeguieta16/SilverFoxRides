@@ -112,7 +112,7 @@ app.post('/api/payment-confirmation', bodyParser.raw({ type: 'application/json' 
             sendSMSNotification(reservationDetails);
         }
 
-        res.json({ received: true });
+        res.status(200).send({ received: true });
     } catch (error) {
         console.error(`Webhook Error: ${error.message}`);
         res.status(400).send(`Webhook Error: ${error.message}`);
