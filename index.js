@@ -9,6 +9,11 @@ const { Vonage } = require('@vonage/server-sdk');
 
 // Initialize Express
 const app = express();
+app.use(bodyParser.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf
+    }
+}))
 const port = process.env.PORT || 3000;
 
 const reservationStore = {};
@@ -92,7 +97,7 @@ app.post('/api/create-checkout', async (req, res) => {
 app.post('/api/payment-confirmation', bodyParser.raw({ type: 'application/json' }), (req, res) => {
     const sig = req.headers['stripe-signature'];
     console.log('Received Stripe Signature:', sig); // Log the signature for debugging
-
+    console.log("Req",req,  req.rawBody)
     try {
         const event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
         console.log('Constructed Event:', event); // Log the event details for debugging
