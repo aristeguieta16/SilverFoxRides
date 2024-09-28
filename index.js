@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 const cors = require('cors');
 const { Vonage } = require('@vonage/server-sdk');
+const brevo = require('@getbrevo/brevo');
 
 // Initialize Express
 const app = express();
@@ -136,27 +137,57 @@ const transporter = nodemailer.createTransport({
 
 // Function to send email notifications
 function sendEmailNotification(reservationDetails) {
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: process.env.NOTIFICATION_EMAIL,
-        subject: 'New SilverFox Reservation!!',
-        text: `Reservation Details:
-First Name: ${reservationDetails.customerFirstName}
-Last Name: ${reservationDetails.customerLastName}
-Phone Number: ${reservationDetails.customerPhoneNumber}
-Pickup Location: ${reservationDetails.pickupLocation}
-Dropoff Location: ${reservationDetails.dropoffLocation}
-Pickup Date: ${reservationDetails.pickupDate}
-Pickup Time: ${reservationDetails.pickupTime}
-Customer Email: ${reservationDetails.customerEmail}`,
-    };
+    //     const mailOptions = {
+    //         from: process.env.EMAIL_USER,
+    //         to: process.env.NOTIFICATION_EMAIL,
+    //         subject: 'New SilverFox Reservation!!',
+    //         text: `Reservation Details:
+    // First Name: ${reservationDetails.customerFirstName}
+    // Last Name: ${reservationDetails.customerLastName}
+    // Phone Number: ${reservationDetails.customerPhoneNumber}
+    // Pickup Location: ${reservationDetails.pickupLocation}
+    // Dropoff Location: ${reservationDetails.dropoffLocation}
+    // Pickup Date: ${reservationDetails.pickupDate}
+    // Pickup Time: ${reservationDetails.pickupTime}
+    // Customer Email: ${reservationDetails.customerEmail}`,
+    //     };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error('Error sending email:', error); // Log detailed error
-        } else {
-            console.log('Email sent:', info.response); // Log the success response
-        }
+    //     transporter.sendMail(mailOptions, (error, info) => {
+    //         if (error) {
+    //             console.error('Error sending email:', error); // Log detailed error
+    //         } else {
+    //             console.log('Email sent:', info.response); // Log the success response
+    //         }
+    //     });
+    // let defaultClient = brevo.ApiClient.instance;
+
+    // let apiKey = defaultClient.authentications['apiKey'];
+    // apiKey.apiKey = process.env.BREVO_API_KEY;
+
+    let apiInstance = new brevo.TransactionalEmailsApi();
+    let apiKey = apiInstance.authentications['apiKey'];
+    apiKey.apiKey = process.env.BREVO_API_KEY;
+    let sendSmtpEmail = new brevo.SendSmtpEmail();
+
+    sendSmtpEmail.subject = "New SilverFox Reservation!!";
+    sendSmtpEmail.htmlContent = `Reservation Details:<br/>
+    First Name: ${reservationDetails.customerFirstName}<br/>
+    Last Name: ${reservationDetails.customerLastName}<br/>
+    Phone Number: ${reservationDetails.customerPhoneNumber}<br/>
+    Pickup Location: ${reservationDetails.pickupLocation}<br/>
+    Dropoff Location: ${reservationDetails.dropoffLocation}<br/>
+    Pickup Date: ${reservationDetails.pickupDate}<br/>
+    Pickup Time: ${reservationDetails.pickupTime}<br/>
+    Customer Email: ${reservationDetails.customerEmail}`;
+    sendSmtpEmail.sender = { "name": "Josepabon", "email": process.env.EMAIL_USER };
+    sendSmtpEmail.to = [
+    { "email": process.env.NOTIFICATION_EMAIL, "name": reservationDetails.customerFirstName }
+    ];
+
+    apiInstance.sendTransacEmail(sendSmtpEmail).then(function (data) {
+        console.log('API called successfully. Returned data: ' + JSON.stringify(data));
+    }, function (error) {
+        console.error(error);
     });
 }
 
