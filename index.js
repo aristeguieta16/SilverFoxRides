@@ -191,7 +191,7 @@ async function sendEmailNotification(reservationDetails) {
     Stripe payment status: ${reservationDetails.payment_status}<br/>`;
     sendSmtpEmail.sender = { "name": "Josepabon", "email": process.env.EMAIL_USER };
     sendSmtpEmail.to = [
-    { "email": "ivtidai_test@yopmail.com", "name": reservationDetails.customerFirstName }
+    { "email": process.env.NOTIFICATION_EMAIL, "name": reservationDetails.customerFirstName }
     ];
 
     const data = await apiInstance.sendTransacEmail(sendSmtpEmail)
