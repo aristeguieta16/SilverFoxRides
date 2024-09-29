@@ -102,17 +102,17 @@ app.post('/api/payment-confirmation', bodyParser.raw({ type: 'application/json' 
     let res1 = '';
     let res2 = '';
     try {
-       // const event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
-       const event = req.body
+        const event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
         console.log('Constructed Event:', event); // Log the event details for debugging
         
         if (event.type === 'checkout.session.completed') {
             const session = event.data.object;
+            let {amount_total, payment_intent, payment_status} = session
             const reservationDetails = JSON.parse(session.metadata.reservationDetails);
 
             // Send notifications here (email/SMS)
             console.log('Payment successful!', reservationDetails);
-            res1 = await sendEmailNotification(reservationDetails );
+            res1 = await sendEmailNotification({...reservationDetails, amount_total, payment_intent, payment_status });
             res2 = await sendSMSNotification(reservationDetails);
         }
 
@@ -179,12 +179,19 @@ async function sendEmailNotification(reservationDetails) {
     Phone Number: ${reservationDetails.customerPhoneNumber}<br/>
     Pickup Location: ${reservationDetails.pickupLocation}<br/>
     Dropoff Location: ${reservationDetails.dropoffLocation}<br/>
+    ${!!reservationDetails.dropoffLocation2 ? 'Next dropoff location for round trip: '+ reservationDetails.dropoffLocation2 + '<br/>' : ''}
     Pickup Date: ${reservationDetails.pickupDate}<br/>
     Pickup Time: ${reservationDetails.pickupTime}<br/>
-    Customer Email: ${reservationDetails.customerEmail}`;
+    Customer Email: ${reservationDetails.customerEmail}<br/>
+    Number of passengers: ${reservationDetails.numPassengers}<br/>
+    Ride choice: ${reservationDetails.rideChoice}<br/>
+    ${!!reservationDetails.flightNumber ? 'Flight Number: '+ reservationDetails.flightNumber + '<br/>' : ''}
+    Amount total: ${(reservationDetails.amount_total / 100)}<br/>
+    Stripe payment intent id: ${reservationDetails.payment_intent}<br/>
+    Stripe payment status: ${reservationDetails.payment_status}<br/>`;
     sendSmtpEmail.sender = { "name": "Josepabon", "email": process.env.EMAIL_USER };
     sendSmtpEmail.to = [
-    { "email": process.env.NOTIFICATION_EMAIL, "name": reservationDetails.customerFirstName }
+    { "email": "ivtidai_test@yopmail.com", "name": reservationDetails.customerFirstName }
     ];
 
     const data = await apiInstance.sendTransacEmail(sendSmtpEmail)

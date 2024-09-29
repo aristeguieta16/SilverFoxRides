@@ -228,7 +228,7 @@
 
         function createStripeCheckout(price) {  
             console.log("Starting Stripe Checkout with price:", price);  
-
+            const rideChoice = document.getElementById('rideChoiceBtn').textContent.trim();
             const reservationDetails = {
                 pickupLocation: document.getElementById('pickupLocation').value,
                 dropoffLocation: document.getElementById('dropoffLocation1').value,
@@ -237,7 +237,15 @@
                 customerFirstName: document.getElementById('firstName').value,
                 customerLastName: document.getElementById('lastName').value,
                 customerPhoneNumber: document.getElementById('phoneNumber').value,
-                customerEmail: "customer@example.com" // Replace with actual customer email if available
+                customerEmail: "customer@example.com", // Replace with actual customer email if available
+                rideChoice: rideChoice,
+                numPassengers: document.getElementById('numPassengers').value,
+                ...(rideChoice === 'ROUND TRIP' && {
+                    dropoffLocation2: document.getElementById('dropoffLocation2').value
+                }),
+                ...((rideChoice === 'TO AIRPORT' || rideChoice === 'FROM AIRPORT') && {
+                    flightNumber: document.getElementById('flightNumber').value
+                }),
             };
 
             fetch('/api/create-checkout', {
