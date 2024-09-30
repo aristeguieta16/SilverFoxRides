@@ -1,36 +1,101 @@
 body {
-    background-color: black;
+    background-color: black !important;
     color: white;
     font-family: 'Montserrat', sans-serif;
     margin: 0;
     padding: 0;
 }
-
-header {
+a{
+    text-decoration: none !important;
+}
+.container_box {
+    max-width: 1500px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    padding: 0 15px;
+}
+.container_wrap {
     display: flex;
+    width: 100%;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    column-gap: 15px;
+}
+
+.container_wrap .header-left {
+    display: flex;
+    align-items: center;
+}
+.container_wrap .header-button-container {
+display: flex;
+column-gap: 15px;
+}
+.hero .container_wrap .hero-image img {
+    max-width: 900px;
+    width: 100%;
+}
+.text-center {
+    text-align: center;
+}
+
+a.navbar-brand {
+    display: flex;
+    height: auto;
+    align-items: center;
+}
+
+a.navbar-brand img {
+    width: 1300px;
+    height: auto;
+}
+
+
+header {
     background-color: black;
-    position: fixed; /* Makes the header fixed at the top */
-    top: 0; /* Position it at the top of the viewport */
+    position: fixed;
+    top: 0;
     left: 0;
-    width: 100%; /* Ensure it spans the full width */
-    z-index: 1000; /* Keep it on top of other content */
+    width: 100%;
+    z-index: 1000;
+    padding: 10px 0;
+}
+header .navbar-inverse {
+    background-color: transparent;
+    margin: 0;
+}
+.navbar-header {
+    width: 100%;
+}
+.navbar-header a.navbar-brand {
+    flex-direction: column;
+    padding: 0;
+    display: inline-flex;
+}
+.navbar-header a.navbar-brand img {
+    max-width: 80px;
+    margin: 0 0 10px 0;
+}
+.navbar-header button.navbar-toggle {
+    margin: 0;
+    margin-top: 20px;
+}
+ul.nav.navbar-nav {
+    display: flex;
 }
 
 body {
     margin-top: 100px; /* Add margin to the top of the body to prevent content from being hidden behind the fixed header */
 }
 
-.header-left {
+/* .header-left {
     display: flex;
     align-items: center;
-}
+} */
 
 .logo {
     height: 80px;
-    margin-right: 10px;
+    /* margin-right: 10px; */
 }
 
 .brand-name {
@@ -47,11 +112,11 @@ nav {
 }
 
 .nav-link {
-    margin-left: 20px;
-    color: white;
+    /* margin-left: 20px; */
+    color: white !important;
     text-decoration: none;
     font-family: 'Montserrat', sans-serif;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
     position: relative;
 }
@@ -74,12 +139,12 @@ nav {
 .header-button-container {
     display: flex;
     align-items: center;
-    position: absolute;
-    right: 80px; /* Adjust this value to move it more to the left */
-    top: 30px;
+    /* position: absolute; */
+    /* right: 80px;
+    top: 30px; */
 }
 
-.header-button {
+/* .header-button {
     background-color: yellow;
     color: black;
     padding: 12px 60px; 
@@ -87,26 +152,28 @@ nav {
     font-size: 14px;
     font-weight: bold;
     border-radius: 20px;
-}
+} */
 
 .header-button:hover {
-    background-color: #FFD700;
+    background-color: #FFD700 !important;
 }
 
 .hero {
     display: flex;
     justify-content: space-between;
     align-items: flex-start; /* Align items at the top */
-    padding: 150px 20px; /* Adjust the padding to add space at the top */
+    padding: clamp(5vw, 5vw, 150px) 0; /* Adjust the padding to add space at the top */
     background-color: black;
     position: relative;
 }
 
 .hero-text {
-    max-width: 40%;
+    max-width: 300px;
+    width: 100%;
     z-index: 2;
     font-family: 'Montserrat', sans-serif;
     margin-bottom: 20px;
+    color: #fff;
 }
 
 .hero-text h2 {
@@ -149,16 +216,16 @@ nav {
 }
 
 .hero-image {
-    position: absolute;
-    right: -250px; /* Keep the image half off the screen */
-    bottom: 0; /* Adjust the image alignment */
+    /* position: absolute;
+    right: -250px;  */
+    bottom: 0; 
     z-index: 1;
 }
 
-.hero-image img {
+/* .hero-image img {
     max-width: 1200px;
     height: auto;
-}
+} */
 
 .offer-section {
     padding: 60px 20px;
@@ -247,7 +314,8 @@ nav {
 }
 
 .contact-info a:hover {
-    text-decoration: underline;
+    text-decoration: underline !important;
+    color: yellow;
 }
 
 /* General Body Styles */
@@ -258,9 +326,28 @@ body {
     margin: 0;
     padding: 0;
 }
+.basicInternal_main {
+    color: #fff;
+}
 
+body.content_page {
+    position: relative;
+}
+body.content_page:before {
+    content: "";
+    display: block;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.7);
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+body.content_page > * {
+    position: relative;
+}
 /* Header Styles */
-header {
+/* header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -270,22 +357,23 @@ header {
     width: 100%;
     z-index: 1000;
     top: 0;
-}
+} */
 
-.header-left {
+/* .header-left {
     display: flex;
     align-items: center;
-}
+} */
 
 .logo {
-    height: 80px;
+    height: auto;
     margin-right: 10px;
+    max-width: 140px;
 }
 
 .brand-name {
     font-size: 30px;
     color: white;
-    margin-right: 40px;
+    margin: 0px;
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -294,7 +382,7 @@ nav {
     align-items: center;
 }
 
-.nav-link {
+/* .nav-link {
     margin-left: 20px;
     color: white;
     text-decoration: none;
@@ -302,7 +390,7 @@ nav {
     font-size: 18px;
     font-weight: 400;
     position: relative;
-}
+} */
 
 .nav-link:hover {
     color: yellow;
@@ -326,21 +414,22 @@ nav {
 
 .header-button {
     background-color: yellow;
-    color: black;
-    padding: 10px 60px;
+    color: black !important;
+   width: 150px;
+   text-align: center;
     text-decoration: none;
-    font-size: 14px;
+    /* font-size: 14px; */
     font-weight: bold;
-    border-radius: 20px;
+    border-radius: 30px;
 }
 
-.header-button:hover {
+/* .header-button:hover {
     background-color: #FFD700;
-}
+} */
 
 /* Main Content Styles */
 main {
-    padding-top: 120px; /* Adjust to prevent content from hiding under the fixed header */
+    padding-top: 90px;
 }
 
 .booking-form-section {
@@ -361,13 +450,33 @@ main {
 
 /* Flex container for the form inputs */
 form#booking-form {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Two columns layout */
-    gap: 20px; /* Space between inputs */
-    max-width: 800px; /* Limit the width for symmetry */
-    margin: 0 auto; /* Center the form */
+    /* display: grid; */
+    /* grid-template-columns: repeat(2, 1fr); */
+    /* gap: 20px; */
+    max-width: 800px;
+    margin: 0 auto;
 }
-
+form#booking-form .form-group {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+form#booking-form .form-group > * {
+    max-width: calc(50% - 10px);
+}
+form#booking-form .form-group > input#phoneNumber {
+    min-width: 100%;
+}
+form#booking-form .passengers-container {
+    margin-bottom: 20px;
+}
+form#booking-form  div#dropoffLocation2Container > *,
+div#flightNumberContainer > * {
+    min-width: 100%;
+}
+form#booking-form  div#dropoffLocation2Container label.same-as-pickup input {
+    margin: 0 10px 0px 0px;
+}
 /* Style for each form input */
 form#booking-form input,
 form#booking-form select {
@@ -408,18 +517,21 @@ form#booking-form .passengers-input {
 }
 
 /* Adjust dropdown positioning */
+.ride-choice {
+    position: relative;
+}
 .dropdown-content {
-    display: none; /* Hidden by default */
+    display: none;
     position: absolute;
     background-color: black;
     color: white;
     width: 100%;
-    max-width: 200px; /* Match button width */
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    max-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Center align below the button */
-    top: 60%; /* Position directly below button */
+    left: calc(50% - 100px);
+    /* transform: translateX(-50%); */
+    /* top: 60%; */
     transition: all 0.3s ease;
 }
 
@@ -427,17 +539,19 @@ form#booking-form .passengers-input {
 .show {
     display: block;
 }
-
 .dropdown-content a {
-    color: white; /* Change text color to white */
+    color: white;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
-    text-align: center; /* Center align the text */
+    text-align: center;
+    font-size: 16px;
+    border-bottom: 1px solid #222;
 }
 
 .dropdown-content a:hover {
     background-color: #333; /* Change hover background color for better contrast */
+    color: #fff;
 }
 
 .show {
@@ -493,7 +607,7 @@ form#booking-form input[type="time"]::placeholder {
 .cta-button {
     grid-column: span 2; /* Make the button span both columns */
     background-color: yellow;
-    color: black;
+    color: black !important;
     padding: 15px 60px;
     text-decoration: none;
     font-size: 16px;
@@ -539,15 +653,22 @@ input[type="date"]:focus, input[type="time"]:focus {
     background-color: #FFD700;
 }
 
-body {
+body:not(.home) {
     background-image: url('SUV.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-color: black; /* Ensures black background behind the image */
     background-attachment: fixed;
+    min-height: 100vh;
 }
-
+main.basicInternal_main {
+    max-width: 1000px;
+    margin: auto;
+    text-align: center;
+    padding: clamp(5vw, 5vw, 30px);
+    font-size: 16px;
+}
 .booking-form-section {
     background-color: rgba(0, 0, 0, 0.7); /* Adds a transparent black background to the booking section to make it readable */
     padding: 110px 20px;
@@ -564,7 +685,7 @@ body {
 
 .additional-info {
     text-align: center;
-    margin-top: 50px;
+    /* margin-top: 50px; */
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.1); /* Slightly transparent background */
     color: white;
@@ -679,9 +800,15 @@ footer {
 }
 
 .footer-link:hover {
-    text-decoration: underline;
+    text-decoration: underline !important;
+    color: yellow !important;
 }
-
+footer {
+    position: fixed !important;
+    bottom: 0;
+    width: 100%;
+    left: 0;
+}
 /* General mobile styles */
 @media (max-width: 600px) {
     header {
@@ -695,13 +822,13 @@ footer {
         box-sizing: border-box;
     }
 
-    .header-left {
+    /* .header-left {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         width: 100%;
-    }
+    } */
 
     .header-left img.logo {
         height: 70px; 
@@ -714,21 +841,21 @@ footer {
         margin: 5px 0;
     }
 
-    nav {
+    /* nav {
         display: flex;
         justify-content: center; 
         gap: 10px; 
         width: 100%;
         padding: 0 20px;
         margin-top: 0; 
-    }
+    } */
 
-    nav a {
+    /* nav a {
         font-size: 14px; 
         color: white; 
         text-decoration: none;
         padding: 5px 10px; 
-    }
+    } */
 
     .header-button-container {
         display: none; 
@@ -744,14 +871,14 @@ footer {
         overflow: hidden;
     }
 
-    .hero-text {
-        max-width: 60%; /* Allow more space for text */
-        margin-left: -40%; /* Move text to the left */
-        padding-top: 20px; /* Align with SUV */
+    /* .hero-text {
+        max-width: 60%; 
+        margin-left: -40%; 
+        padding-top: 20px; 
         z-index: -0.9;
         font-family: 'Montserrat', sans-serif;
-        text-align: left; /* Align text to the left */
-    }
+        text-align: left; 
+    } */
     
     .hero-text h2 {
         font-size: 50px; /* Match design size */
@@ -776,16 +903,16 @@ footer {
         margin-top: 20px;
     }
 
-    .hero-image {
+    /* .hero-image {
         position: absolute;
-        right: -10px; /* Slightly move to the left */
+        right: -10px; 
         bottom: 0;
         z-index: 1;
-        width: 60%; /* Increase width for a larger SUV */
-        max-width: 450px; /* Increase the max width */
+        width: 60%; 
+        max-width: 450px;
         height: auto;
-        transform: translateX(0); /* Adjust centering */
-    }
+        transform: translateX(0); 
+    } */
 
     .hero-image img {
         max-width: 550px; /* Adjust size */
@@ -808,14 +935,14 @@ footer {
             margin: 0 auto; /* Center form */
         }
     
-        form#booking-form input,
+        /* form#booking-form input,
         form#booking-form select {
             width: 100%;
             max-width: 300px;
-            padding: 12px; /* Ensure touch-friendly sizes */
-            margin: 5px 0; /* Consistent spacing */
-            font-size: 16px; /* Easy to read and click */
-        }
+            padding: 12px; 
+            margin: 5px 0; 
+            font-size: 16px; 
+        } */
     
         form#booking-form input[type="number"] {
             text-align: center; /* Align text center for better readability */
@@ -829,4 +956,59 @@ footer {
         }
     }
     
+}
+
+@media (max-width:991px) {
+    .container_wrap .header-left {
+        flex-direction: column;
+    }
+    .brand-name {
+        font-size: 20px;
+    }
+    header .container_wrap {
+        flex-direction: column;
+        row-gap: 25px;
+    }
+    .nav-link {
+        font-size: 14px;
+    }
+    .navbar-header a.navbar-brand img {
+        margin: 0;
+    }
+}
+@media (max-width:768px) {
+    div#myNavbar {
+        width: 100%;
+    }
+    .header-button {
+        margin: auto;
+    }
+    ul.nav.navbar-nav {
+        display: block;
+        text-align: center;
+    }   
+    .container_wrap {
+        flex-direction: column;
+        row-gap: 30px;
+    }
+    .hero-text {
+        max-width: 100%;
+        text-align: center;
+    }
+    form#booking-form .form-group > * {
+        max-width: 100%;
+    }
+    form#booking-form .form-group {
+        gap: 15px;
+        width: 100%;
+    }
+    .ride-choice {
+        width: 100%;
+    }
+    form#booking-form .passengers-container {
+        margin-bottom: 15px;
+    }
+    div#dropoffLocation2Container, div#flightNumberContainer {
+        margin-top: -12px;
+    }
 }

@@ -7,41 +7,37 @@
     <title>SilverFox - Book Your Ride</title>
     <link rel="stylesheet" href="/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <!-- Google Maps Places API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrDJA0TAg9Q9MThHqRe9tGCsNsU4vMrcQ&libraries=places"></script>
 </head>
 
 <body>
     <header>
-        <div class="header-left">
-            <a href="/public/index.html"><img src="/public/SilverFox.png" alt="SilverFox Logo" class="logo"></a>
-            <h1 class="brand-name">SILVERFOX RIDES</h1>
-            <nav>
-                <a href="/index.html" class="nav-link">Home</a>
-                <a href="/index.html#services-section" class="nav-link">Services</a>
-                <a href="/index.html#contact" class="nav-link">Contact</a>
-            </nav>
-        </div>
-        <div class="header-button-container">
-            <a href="/book.html" class="header-button">BOOK</a>
-        </div>
-        <style>
-            .dropdown-content {
-                font-size: 16px; 
-                padding: 10px; 
-            }
-            .form-group input[type="date"],
-            .form-group input[type="time"] {
-                width: calc(100% - 20px);
-                padding: 10px; 
-                font-size: 16px; 
-                box-sizing: border-box; 
-            }
-            #rideChoiceBtn {
-                font-size: 16px;
-                padding: 10px 15px; 
-            }
-        </style>
+        <nav class="navbar navbar-inverse">
+        <div class="container_box"> 
+            <div class="container_wrap"> 
+               
+                      <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>
+                          <span class="icon-bar"></span>                        
+                        </button>
+                        <a class="navbar-brand" href="#"><img src="/public/SilverFox.png" alt="SilverFox Logo" class="logo"><h1 class="brand-name">SILVERFOX RIDES</h1></a>
+                      </div>
+                      <div class="collapse navbar-collapse" id="myNavbar">
+                        <ul class="nav navbar-nav">
+                          <li><a href="/index.html" class="nav-link">Home</a></li>
+                          <li><a href="/index.html#services-section" class="nav-link">Services</a></li>
+                          <li><a href="/index.html#contact" class="nav-link">Contact</a></li>
+                          <li><a href="/public/book.html" class="header-button">BOOK</a></li>
+                        </ul>
+                      </div>
+                    </div>   
+           </div> 
+        </nav>
+        
     </header>
 
     <main>
@@ -56,21 +52,20 @@
                         <a href="#" id="toAirport">To Airport</a>
                         <a href="#" id="fromAirport">From Airport</a>
                     </div>
-                    <div class="form-group passengers-container">
+                    <div class="passengers-container">
                         <input type="number" id="numPassengers" placeholder="Passengers" min="1" max="10" />
                     </div>
                 </div>
                 <div class="form-group">
                     <input type="date" id="pickupDate" placeholder="Pick-Up Date">
+                    <input type="text" id="pickupLocation" placeholder="Pick-Up Location" />
                     <input type="time" id="pickupTime" placeholder="Pick-Up Time">
+                    <input type="text" id="dropoffLocation1" placeholder="Drop-Off Location" />
                     <input type="text" id="firstName" placeholder="First Name">
                     <input type="text" id="lastName" placeholder="Last Name">
                     <input type="text" id="phoneNumber" placeholder="Phone Number">
                 </div>
-                <div class="form-group">
-                    <input type="text" id="pickupLocation" placeholder="Pick-Up Location" />
-                    <input type="text" id="dropoffLocation1" placeholder="Drop-Off Location" />
-                </div>
+
                 <div id="flightNumberContainer" class="form-group" style="display:none;">
                     <input type="text" id="flightNumber" placeholder="Enter Flight Number (e.g., NK1908)">
                 </div>
@@ -89,7 +84,8 @@
             <p>If you wish to book a service with more than two stops, please <a href="/index.html#contact" class="contact-link">click here</a> to contact us via email or phone for availability.</p>
         </section>
     </main>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
     <script>
         function initializeGooglePlaces() {
             const input1 = document.getElementById('pickupLocation');
