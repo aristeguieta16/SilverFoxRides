@@ -998,6 +998,12 @@ footer {
     form#booking-form .form-group > * {
         max-width: 100%;
     }
+    form#booking-form .form-group input[type="date"],
+    form#booking-form .form-group input[type="time"] {
+        min-width: -webkit-fill-available;
+        width: 100% !important;
+        min-height: 50px;
+    }
     form#booking-form .form-group {
         gap: 15px;
         width: 100%;
