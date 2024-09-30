@@ -86,6 +86,9 @@
     </main>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
+
+
+    
     <script>
         function initializeGooglePlaces() {
             const input1 = document.getElementById('pickupLocation');
@@ -310,6 +313,41 @@
             console.log(`Selected time: ${selectedTime}`);
         });
     </script>
+
+
+<script>
+    window.onload = function() {
+         // Set input types to text so placeholders show up on load
+         document.getElementById('pickupDate').setAttribute('type', 'text');
+         document.getElementById('pickupTime').setAttribute('type', 'text');
+     }
+ 
+     // Change input type to 'date' when focused
+     document.getElementById('pickupDate').addEventListener('focus', function() {
+         this.setAttribute('type', 'date');
+     });
+ 
+     // Change back to 'text' type if input is empty after blur
+     document.getElementById('pickupDate').addEventListener('blur', function() {
+         if (!this.value) {
+             this.setAttribute('type', 'text');
+             this.setAttribute('placeholder', 'Select a date');
+         }
+     });
+ 
+     // Change input type to 'time' when focused
+     document.getElementById('pickupTime').addEventListener('focus', function() {
+         this.setAttribute('type', 'time');
+     });
+ 
+     // Change back to 'text' type if input is empty after blur
+     document.getElementById('pickupTime').addEventListener('blur', function() {
+         if (!this.value) {
+             this.setAttribute('type', 'text');
+             this.setAttribute('placeholder', 'Select a time');
+         }
+     });
+ </script>
 
 </body>
 </html>
