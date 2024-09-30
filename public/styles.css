@@ -1002,6 +1002,7 @@ footer {
     form#booking-form .form-group input[type="time"] {
         min-width: -webkit-fill-available;
         width: 100% !important;
+        height: 50px;
         min-height: 50px;
     }
     form#booking-form .form-group {
