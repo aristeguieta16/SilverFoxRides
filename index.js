@@ -23,19 +23,19 @@ const reservationStore = {};
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 const corsOptions = {
-  origin: ['https://www.silverfoxrides.vip', 'https://silverfoxrides.vip'],
+  origin: ['https://www.silverfoxrides.com', 'https://silverfoxrides.com'],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   allowedHeaders: 'Content-Type, Authorization, X-Requested-With',
   credentials: true
 };
 
 app.use((req, res, next) => {
-  if (req.headers.host === 'silverfoxrides.vip' && !req.url.startsWith('https://www.silverfoxrides.vip')) {
-    res.setHeader('Access-Control-Allow-Origin', 'https://www.silverfoxrides.vip');
+  if (req.headers.host === 'silverfoxrides.com' && !req.url.startsWith('https://www.silverfoxrides.com')) {
+    res.setHeader('Access-Control-Allow-Origin', 'https://www.silverfoxrides.com');
     res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.redirect(301, `https://www.silverfoxrides.vip${req.url}`);
+    res.redirect(301, `https://www.silverfoxrides.com${req.url}`);
   } else {
     cors(corsOptions)(req, res, next);
   }
@@ -77,8 +77,8 @@ app.post('/api/create-checkout', async (req, res) => {
               quantity: 1,
           }],
           mode: 'payment',
-          success_url: 'https://www.silverfoxrides.vip/thank-you.html',
-          cancel_url: 'https://www.silverfoxrides.vip/book.html',
+          success_url: 'https://www.silverfoxrides.com/thank-you.html',
+          cancel_url: 'https://www.silverfoxrides.com/book.html',
           metadata: {
               reservationDetails: JSON.stringify(reservationDetails),
           },
