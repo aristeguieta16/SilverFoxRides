@@ -8,6 +8,9 @@ body {
 a{
     text-decoration: none !important;
 }
+.mb-20 {
+    margin-bottom: 30px;
+}
 .container_box {
     max-width: 1500px;
     margin-left: auto;
