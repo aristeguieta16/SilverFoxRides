@@ -139,7 +139,7 @@
                 document.getElementById('rideChoiceDropdown').classList.remove('show');
             });
 
-            document.getElementById('same AsPickup').addEventListener('change', function () {
+            document.getElementById('sameAsPickup').addEventListener('change', function () {
                 const pickupLocation = document.getElementById('pickupLocation').value;
                 const dropoffLocation2 = document.getElementById('dropoffLocation2');
 
@@ -151,6 +151,7 @@
                     dropoffLocation2.disabled = false;
                 }
             });
+
         }
 
         document.getElementById('booking-form').addEventListener('submit', function(event) {
