@@ -195,7 +195,7 @@
             // Calculate distance and price, then initiate Stripe checkout
             if (rideChoice === "ONE WAY" || rideChoice === "TO AIRPORT" || rideChoice === "FROM AIRPORT") {
                 calculateDistance(pickupLocation, dropoffLocation1, function(distance) {
-                    const price = calculatePrice(distance);
+                    const price = calculatePrice(distance, rideChoice === 'ONE WAY' ? 'oneway' : 'airport');
                     console.log('Calculated Price:', price);
                     createStripeCheckout(price);  
                 });
@@ -203,13 +203,13 @@
                 calculateDistance(pickupLocation, dropoffLocation1, function(distance1) {
                     if (document.getElementById('sameAsPickup').checked) {
                         const totalDistance = distance1 * 2;
-                        const price = calculatePrice(totalDistance);
+                        const price = calculatePrice(totalDistance, 'round');
                         console.log('Calculated Price for ROUND TRIP:', price);
                         createStripeCheckout(price);  
                     } else {
                         calculateDistance(dropoffLocation1, dropoffLocation2, function(distance2) {
                             const totalDistance = distance1 + distance2;
-                            const price = calculatePrice(totalDistance);
+                            const price = calculatePrice(totalDistance, 'round');
                             console.log('Calculated Price for multiple stops:', price);
                             createStripeCheckout(price);  
                         });
@@ -291,13 +291,84 @@
                 }
             });
         }
-
-        function calculatePrice(totalDistance) {
+        function getUnitPrice(distance, type) {
+            let unitPrice = 0;
+            let priceMap = {
+                "oneway": [
+                    {
+                        distanceGreaterEqual: 1,
+                        distanceLessEqual: 10,
+                        price: 5
+                    },
+                    {
+                        distanceGreaterEqual: 11,
+                        distanceLessEqual: 22,
+                        price: 4
+                    },
+                    {
+                        distanceGreaterEqual: 23,
+                        price: 3
+                    }
+                ],
+                'round': [
+                    {
+                        distanceGreaterEqual: 1,
+                        distanceLessEqual: 30,
+                        price: 6.5
+                    },
+                    {
+                        distanceGreaterEqual: 31,
+                        distanceLessEqual: 50,
+                        price: 4
+                    },
+                    {
+                        distanceGreaterEqual: 51,
+                        distanceLessEqual: 70,
+                        price: 3
+                    },
+                    {
+                        distanceGreaterEqual: 70,
+                        price: 2.5
+                    }
+                ],
+                "airport": [
+                    {
+                        distanceGreaterEqual: 1,
+                        distanceLessEqual: 10,
+                        price: 5
+                    },
+                    {
+                        distanceGreaterEqual: 11,
+                        distanceLessEqual: 22,
+                        price: 4
+                    },
+                    {
+                        distanceGreaterEqual: 23,
+                        price: 3
+                    }
+                ]
+            }
+            priceMap[type].map((item) => {
+                if(item.distanceLessEqual !== undefined) {
+                    if(item.distanceGreaterEqual <= distance &&  distance <= item.distanceLessEqual ) {
+                        unitPrice = item.price;
+                    }
+                } else {
+                    if(item.distanceGreaterEqual <= distance ) {
+                        unitPrice = item.price;
+                    }
+                }
+            });
+            console.log("Debugger", distance, unitPrice, type);
+            return unitPrice;
+        }
+        function calculatePrice(totalDistance, type) {
             if (isNaN(totalDistance) || totalDistance <= 0) {
                 console.error('Invalid distance for price calculation:', totalDistance);
                 return 0; // Default to 0 or a safe fallback
             }
-            return totalDistance > 50 ? totalDistance * 3 : totalDistance * 2.5;
+            //return totalDistance > 50 ? totalDistance * 3 : totalDistance * 2.5;
+            return totalDistance * getUnitPrice(totalDistance, type)
         }
 
         const pickupDateInput = document.getElementById('pickupDate');
