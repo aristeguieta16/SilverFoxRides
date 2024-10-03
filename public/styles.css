@@ -753,6 +753,7 @@ form#contactForm {
 
 form#contactForm input,
 form#contactForm textarea {
+    color: #000;
     width: 100%;
     padding: 15px;
     margin-bottom: 15px;
