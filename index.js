@@ -123,6 +123,28 @@ app.post('/api/payment-confirmation', bodyParser.raw({ type: 'application/json' 
     }
 });
 
+app.post('/api/contact-us', async (req, res) => {
+    try {
+        const { fullName,
+            email,
+            phoneNumber,
+            message,
+            warningMessage } = req.body;
+        await contactUs({
+            fullName,
+            email,
+            phoneNumber,
+            message,
+            warningMessage
+        })
+        res.status(200).send({ message: 'Success' });
+    } catch (error) {
+        console.error(`Webhook Error: ${error.message}`);
+        res.status(400).send(`Webhook Error: ${error.message}`);
+    }
+    
+})
+
 // Set up Nodemailer transporter
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -137,6 +159,35 @@ const transporter = nodemailer.createTransport({
         rejectUnauthorized: false,
     },
 });
+
+async function contactUs({
+    fullName,
+    email,
+    phoneNumber,
+    message,
+    warningMessage
+}) {
+    let apiInstance = new brevo.TransactionalEmailsApi();
+    let apiKey = apiInstance.authentications['apiKey'];
+    apiKey.apiKey = process.env.BREVO_API_KEY;
+    let sendSmtpEmail = new brevo.SendSmtpEmail();
+
+    sendSmtpEmail.subject = "New query!!";
+    sendSmtpEmail.htmlContent = `User Detail:<br/>
+    Full Name: ${fullName}<br/>
+    Email: ${email}<br/>
+    Phone Number: ${phoneNumber}<br/>
+    Message: ${message}<br/>
+    warningMessage: ${JSON.stringify(warningMessage)}<br/>`;
+    sendSmtpEmail.sender = { "name": "Josepabon", "email": process.env.EMAIL_USER };
+    sendSmtpEmail.to = [
+    { "email": "ivtidai_contact@yopmail.com", "name": 'Josepabon' }
+    ];
+
+    const data = await apiInstance.sendTransacEmail(sendSmtpEmail)
+    console.log('API called successfully. Returned data: ' + JSON.stringify(data));
+    return data;
+}
 
 // Function to send email notifications
 async function sendEmailNotification(reservationDetails) {

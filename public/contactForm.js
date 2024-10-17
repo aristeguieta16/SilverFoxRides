@@ -1,4 +1,4 @@
-document.getElementById('contactForm').addEventListener('submit', function(event) {
+document.getElementById('send-message').addEventListener('click', function(event) {
     event.preventDefault();
 
     // Get form values
@@ -19,5 +19,31 @@ document.getElementById('contactForm').addEventListener('submit', function(event
     warningMessage.style.display = 'none';
 
     // If validation passes, allow the form to submit to Formspree
-    this.submit();
+    // this.submit();
+
+    fetch('/api/contact-us', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            fullName,
+            email,
+            phoneNumber,
+            message,
+            warningMessage
+        }),
+        credentials: 'include', // Ensure credentials (cookies, etc.) are sent with the request
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('We will contact you soon.');
+    })
+    .catch(error => {
+        console.error('Error in Stripe Checkout:', error);
+        alert('An error occurred while processing. Please try again.');
+    })
+    .finally(() => {
+        document.getElementById('contactForm').reset();
+    });
 });
