@@ -181,7 +181,7 @@ async function contactUs({
     warningMessage: ${JSON.stringify(warningMessage)}<br/>`;
     sendSmtpEmail.sender = { "name": "Josepabon", "email": process.env.EMAIL_USER };
     sendSmtpEmail.to = [
-    { "email": "ivtidai_contact@yopmail.com", "name": 'Josepabon' }
+    { "email": process.env.NOTIFICATION_EMAIL, "name": 'Josepabon' }
     ];
 
     const data = await apiInstance.sendTransacEmail(sendSmtpEmail)
