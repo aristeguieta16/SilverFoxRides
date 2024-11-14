@@ -9,48 +9,63 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <!-- Google Maps Places API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrDJA0TAg9Q9MThHqRe9tGCsNsU4vMrcQ&libraries=places"></script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrDJA0TAg9Q9MThHqRe9tGCsNsU4vMrcQ&libraries=places"></script>
 </head>
 
 <body>
     <header>
         <nav class="navbar navbar-inverse">
-        <div class="container_box"> 
-            <div class="container_wrap"> 
-               
-                      <div class="navbar-header">
+            <div class="container_box">
+                <div class="container_wrap">
+
+                    <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                          <span class="icon-bar"></span>
-                          <span class="icon-bar"></span>
-                          <span class="icon-bar"></span>                        
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="index.html"><img src="/public/SilverFox.png" alt="SilverFox Logo" class="logo"><h1 class="brand-name">SILVERFOX RIDES</h1></a>
-                      </div>
-                      <div class="collapse navbar-collapse" id="myNavbar">
+                        <a class="navbar-brand" href="index.html"><img src="/public/SilverFox.png" alt="SilverFox Logo"
+                                class="logo">
+                            <h1 class="brand-name">SILVERFOX RIDES</h1>
+                        </a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="myNavbar">
                         <ul class="nav navbar-nav">
-                          <li><a href="/index.html" class="nav-link">Home</a></li>
-                          <li><a href="/index.html#services-section" class="nav-link">Services</a></li>
-                          <li><a href="/index.html#contact" class="nav-link">Contact</a></li>
-                          <li><a href="/public/book.html" class="header-button">BOOK</a></li>
+                            <li><a href="/index.html" class="nav-link">Home</a></li>
+                            <li><a href="/index.html#services-section" class="nav-link">Services</a></li>
+                            <li><a href="/index.html#contact" class="nav-link">Contact</a></li>
+                            <li><a href="/book.html" class="header-button">BOOK</a></li>
                         </ul>
-                      </div>
-                    </div>   
-           </div> 
+                    </div>
+                </div>
+            </div>
         </nav>
-        
+
     </header>
 
     <main>
         <section class="booking-form-section">
-            <h2>BOOK WITH US</h 2>
+            <h2>BOOK WITH US</h2>
             <form id="booking-form">
                 <div class="ride-choice">
                     <button type="button" id="rideChoiceBtn">RIDE CHOICE</button>
                     <div id="rideChoiceDropdown" class="dropdown-content">
                         <a href="#" id="oneWay">One Way</a>
-                        <a href="#" id="roundTrip">Round Trip</a>
-                        <a href="#" id="toAirport">To Airport</a>
                         <a href="#" id="fromAirport">From Airport</a>
+                        <a href="#" id="toAirport">To Airport</a>
+                        <a href="#" id="hourlyService">Hourly Service</a>
+                        <a href="#" id="chauffeur">Chauffeur</a>
+                    </div>
+                    <div class="car-type">
+                        <h2>SELECT YOUR RIDE OPTION</h2>
+                        <button type="button" id="carType">CAR TYPE</button>
+                        <div id="carTypeDropdown" class="dropdown-content">
+                            <a href="#" id="blueFox">Blue Fox</a>
+                            <a href="#" id="silverFox">Silver Fox</a>
+                            <a href="#" id="blackFox">Black Fox</a>
+                            <a href="#" id="foxPack">Fox Pack</a>
+                        </div>
                     </div>
                     <div class="passengers-container">
                         <input type="number" id="numPassengers" placeholder="Passengers" min="1" max="10" />
@@ -66,13 +81,18 @@
                     <input type="text" id="phoneNumber" placeholder="Phone Number">
                 </div>
 
-                <div id="flightNumberContainer" class="form-group" style="display:none;">
-                    <input type="text" id="flightNumber" placeholder="Enter Flight Number (e.g., NK1908)">
+
+                <!-- Airline and Flight Number Inputs (initially hidden) -->
+                <div id="flightDetailsContainer" class="form-group" style="display:none;">
+                    <input type="text" id="airline" placeholder="Enter Airline Name">
+                    <input type="text" id="flightNumber" placeholder="Enter Flight Number">
                 </div>
+
                 <div class="form-group" id="dropoffLocation2Container" style="display:none;">
                     <input type="text" id="dropoffLocation2" placeholder="Drop-Off Location 2">
                     <label class="same-as-pickup">
-                        <input type="checkbox" id="sameAsPickup"> Drop-Off Location 2 is the same as the Pick-Up Location
+                        <input type="checkbox" id="sameAsPickup"> Drop-Off Location 2 is the same as the Pick-Up
+                        Location
                     </label>
                 </div>
                 <div id="warning-message" class="warning-message"></div>
@@ -81,15 +101,27 @@
         </section>
 
         <section class="additional-info">
-            <p>If you wish to book a service with more than two stops, please <a href="/index.html#contact" class="contact-link">click here</a> to contact us via email or phone for availability.</p>
+            <p>If you wish to book a service with more than two stops, please <a href="/index.html#contact"
+                    class="contact-link">click here</a> to contact us via email or phone for availability.</p>
         </section>
     </main>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
+    <!-- Include UUID Library -->
+    <script src="https://cdn.jsdelivr.net/npm/uuid@8.3.2/dist/umd/uuid.min.js"></script>
 
-    
     <script>
+
+        // Hourly rates for different car types and services
+        const hourlyRates = {
+            "chauffeur": 50,
+            "blueFox": 55,
+            "silverFox": 60,
+            "blackFox": 70,
+            "foxPack": 130
+        };
+
         function initializeGooglePlaces() {
             const input1 = document.getElementById('pickupLocation');
             const input2 = document.getElementById('dropoffLocation1');
@@ -101,78 +133,150 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             initializeGooglePlaces();
-            setupRideChoiceListeners();
+            setupRideChoiceListeners(); // Initialize the listeners for "Ride Choice" selection
+            setupCarTypeListeners(); // Initialize the listeners for "Car Type" selection
         });
 
         function setupRideChoiceListeners() {
+            const carTypeDiv = document.querySelector('.car-type');
+            const dropoffLocation1Input = document.getElementById('dropoffLocation1');
+            const flightDetailsContainer = document.getElementById('flightDetailsContainer'); // New section for flight details
+
             document.getElementById('rideChoiceBtn').addEventListener('click', function () {
                 document.getElementById('rideChoiceDropdown').classList.toggle('show');
             });
 
             document.getElementById('oneWay').addEventListener('click', function () {
-                document.getElementById('dropoffLocation2Container').style.display = 'none';
-                document.getElementById('flightNumberContainer').style.display = 'none';
                 document.getElementById('rideChoiceBtn').textContent = "ONE WAY";
+                carTypeDiv.style.display = 'none';
+                dropoffLocation1Input.style.display = 'block';
+                flightDetailsContainer.style.display = 'none'; // Hide flight details
                 document.getElementById('rideChoiceDropdown').classList.remove('show');
-            });
-
-            document.getElementById('roundTrip').addEventListener('click', function () {
-                document.getElementById('dropoffLocation2Container').style.display = 'block';
-                document.getElementById('flightNumberContainer').style.display = 'none';
-                document.getElementById('rideChoiceBtn').textContent = "ROUND TRIP";
-                document.getElementById('rideChoiceDropdown').classList.remove('show');
-                document.getElementById('sameAsPickup').checked = false;
-                document.getElementById('dropoffLocation2').value = '';
             });
 
             document.getElementById('toAirport').addEventListener('click', function () {
-                document.getElementById('dropoffLocation2Container').style.display = 'none';
-                document.getElementById('flightNumberContainer').style.display = 'block';
                 document.getElementById('rideChoiceBtn').textContent = "TO AIRPORT";
+                carTypeDiv.style.display = 'none';
+                dropoffLocation1Input.style.display = 'block';
+                flightDetailsContainer.style.display = 'none'; // Hide flight details
                 document.getElementById('rideChoiceDropdown').classList.remove('show');
             });
 
             document.getElementById('fromAirport').addEventListener('click', function () {
-                document.getElementById('dropoffLocation2Container').style.display = 'none';
-                document.getElementById('flightNumberContainer').style.display = 'block';
                 document.getElementById('rideChoiceBtn').textContent = "FROM AIRPORT";
+                carTypeDiv.style.display = 'none';
+                dropoffLocation1Input.style.display = 'block'; // Hide drop-off location 1 input for airport pickups
+                flightDetailsContainer.style.display = 'block'; // Show flight details (airline and flight number)
                 document.getElementById('rideChoiceDropdown').classList.remove('show');
             });
 
-            document.getElementById('sameAsPickup').addEventListener('change', function () {
-                const pickupLocation = document.getElementById('pickupLocation').value;
-                const dropoffLocation2 = document.getElementById('dropoffLocation2');
+            document.getElementById('hourlyService').addEventListener('click', function () {
+                document.getElementById('rideChoiceBtn').textContent = "Hourly Service";
+                carTypeDiv.style.display = 'block';
+                dropoffLocation1Input.style.display = 'block';
+                flightDetailsContainer.style.display = 'none'; // Hide flight details for hourly service
+                document.getElementById('rideChoiceDropdown').classList.remove('show');
+            });
 
-                if (this.checked) {
-                    dropoffLocation2.value = pickupLocation;
-                    dropoffLocation2.disabled = true;
-                } else {
-                    dropoffLocation2.value = '';
-                    dropoffLocation2.disabled = false;
-                }
+            document.getElementById('chauffeur').addEventListener('click', function () {
+                document.getElementById('rideChoiceBtn').textContent = "Chauffeur";
+                carTypeDiv.style.display = 'none';
+                dropoffLocation1Input.style.display = 'none';
+                flightDetailsContainer.style.display = 'none'; // Hide flight details for chauffeur
+                document.getElementById('rideChoiceDropdown').classList.remove('show');
+            });
+        }
+
+
+
+        function setupCarTypeListeners() {
+            document.getElementById('carType').addEventListener('click', function () {
+                document.getElementById('carTypeDropdown').classList.toggle('show');
+            });
+
+            document.getElementById('blueFox').addEventListener('click', function () {
+                document.getElementById('carType').textContent = "Blue Fox";
+                document.getElementById('carTypeDropdown').classList.remove('show');
+            });
+
+            document.getElementById('silverFox').addEventListener('click', function () {
+                document.getElementById('carType').textContent = "Silver Fox";
+                document.getElementById('carTypeDropdown').classList.remove('show');
+            });
+
+            document.getElementById('blackFox').addEventListener('click', function () {
+                document.getElementById('carType').textContent = "Black Fox";
+                document.getElementById('carTypeDropdown').classList.remove('show');
+            });
+
+            document.getElementById('foxPack').addEventListener('click', function () {
+                document.getElementById('carType').textContent = "Fox Pack";
+                document.getElementById('carTypeDropdown').classList.remove('show');
+
+                // Display warning message
+                const warningMessage = document.getElementById('warning-message');
+                warningMessage.textContent = "For Fox Pack bookings, please contact us directly for assistance.";
+                warningMessage.style.display = 'block';
+
+                // Disable or hide the submit button
+                document.querySelector('.cta-button').style.display = 'none'; // Hide the button
+            });
+
+            // Reset the warning message and re-enable the submit button when a different car type is selected
+            ['blueFox', 'silverFox', 'blackFox'].forEach(id => {
+                document.getElementById(id).addEventListener('click', function () {
+                    document.getElementById('carType').textContent = this.textContent;
+                    document.getElementById('carTypeDropdown').classList.remove('show');
+
+                    // Hide the warning message and show the submit button
+                    const warningMessage = document.getElementById('warning-message');
+                    warningMessage.style.display = 'none';
+                    document.querySelector('.cta-button').style.display = 'block'; // Show the button
+                });
             });
 
         }
 
-        document.getElementById('booking-form').addEventListener('submit', function(event) {
+        document.getElementById('booking-form').addEventListener('submit', function (event) {
             event.preventDefault();
 
-            const pickupLocation = document.getElementById('pickupLocation').value;
-            const dropoffLocation1 = document.getElementById('dropoffLocation1').value;
-            const dropoffLocation2 = document.getElementById('dropoffLocation2').value;
-            const pickupDate = document.getElementById('pickupDate').value;
-            const pickupTime = document.getElementById('pickupTime').value;
+            const pickupLocation = document.getElementById('pickupLocation')?.value;
+            const dropoffLocation1 = document.getElementById('dropoffLocation1')?.value;
+            const dropoffLocation2 = document.getElementById('dropoffLocation2')?.value;
+            const pickupDate = document.getElementById('pickupDate')?.value;
+            const pickupTime = document.getElementById('pickupTime')?.value;
             const warningMessage = document.getElementById('warning-message');
-            const rideChoice = document.getElementById('rideChoiceBtn').textContent.trim();
-            const numPassengers = parseInt(document.getElementById('numPassengers').value, 10);
+            const rideOption = document.getElementById('rideChoiceBtn')?.textContent.trim();
+            const numPassengers = parseInt(document.getElementById('numPassengers')?.value, 10);
+            const serviceHours = document.getElementById('serviceHours')?.value;
+            const carType = document.getElementById('carType')?.textContent.trim();
+            const airline = document.getElementById('airline')?.value; // Airline input
+            const flightNumber = document.getElementById('flightNumber')?.value; // Flight number input
 
             const today = new Date().toISOString().split('T')[0];
 
-            if (!pickupLocation || !dropoffLocation1 || (rideChoice === "ROUND TRIP" && !dropoffLocation2)) {
-                warningMessage.textContent = "Please fill in all required locations.";
+
+
+            if (
+
+                !pickupLocation ||
+
+                (rideOption !== "Chauffeur" && !dropoffLocation1) ||
+                (rideOption === "HOURLY SERVICE" && (!serviceHours || !carType))
+            ) {
+                warningMessage.textContent = "Please fill in all required fields.";
                 warningMessage.style.display = 'block';
                 return;
             }
+            // if (
+            //     !pickupLocation ||
+            //     (rideOption !== "HOURLY SERVICE" && !dropoffLocation1) ||
+            //     (rideOption === "HOURLY SERVICE" && (!serviceHours || !carType))
+            // ) {
+            //     warningMessage.textContent = "Please fill in all required fields.";
+            //     warningMessage.style.display = 'block';
+            //     return;
+            // }
             if (numPassengers > 4) {
                 alert("For parties larger than 4 passengers, please reach out to us directly.");
                 return;
@@ -190,45 +294,40 @@
                 return;
             }
 
-            // Hide the warning message since everything is valid
             warningMessage.style.display = 'none';
 
-            // Calculate distance and price, then initiate Stripe checkout
-            if (rideChoice === "ONE WAY" || rideChoice === "TO AIRPORT" || rideChoice === "FROM AIRPORT") {
-                calculateDistance(pickupLocation, dropoffLocation1, function(distance) {
-                    const price = calculatePrice(distance, rideChoice === 'ONE WAY' ? 'oneway' : 'airport');
-                    console.log('Calculated Price:', price);
-                    createStripeCheckout(price);  
-                });
-            } else if (rideChoice === "ROUND TRIP") {
-                calculateDistance(pickupLocation, dropoffLocation1, function(distance1) {
-                    if (document.getElementById('sameAsPickup').checked) {
-                        const totalDistance = distance1 * 2;
-                        const price = calculatePrice(totalDistance, 'round');
-                        console.log('Calculated Price for ROUND TRIP:', price);
-                        createStripeCheckout(price);  
-                    } else {
-                        calculateDistance(dropoffLocation1, dropoffLocation2, function(distance2) {
-                            const totalDistance = distance1 + distance2;
-                            const price = calculatePrice(totalDistance, 'round');
-                            console.log('Calculated Price for multiple stops:', price);
-                            createStripeCheckout(price);  
-                        });
-                    }
-                });
-            }
-        });
 
+            if (rideOption == "Hourly Service") {
+
+                let price =
+                    carType === "Blue Fox" ? 55 :
+                        carType === "Silver Fox" ? 60 :
+                            carType === "Black Fox" ? 70 :
+                                carType === "Fox Pack" ? 130 :
+                                    "";
+                createStripeCheckout(price, airline, flightNumber);
+                ;
+            }
+            calculateDistance(pickupLocation, dropoffLocation1, function (distance) {
+                const price = calculatePrice(
+                    distance,
+                    rideOption === 'HOURLY SERVICE' ? 'hourly' : rideOption === 'One Way' ? 'oneway' : 'airport',
+                    carType
+                );
+
+                createStripeCheckout(price, airline, flightNumber); // Include airline and flight number in checkout
+            });
+        });
         function uuidv4() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
                 var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
                 return v.toString(16);
             });
         }
 
-        function createStripeCheckout(price) {  
-            console.log("Starting Stripe Checkout with price:", price);  
-            const rideChoice = document.getElementById('rideChoiceBtn').textContent.trim();
+        function createStripeCheckout(price, airline, flightNumber) {
+            console.log("Starting Stripe Checkout with price:", price);
+            const rideOption = document.getElementById('rideChoiceBtn').textContent.trim();
             const reservationDetails = {
                 pickupLocation: document.getElementById('pickupLocation').value,
                 dropoffLocation: document.getElementById('dropoffLocation1').value,
@@ -237,15 +336,17 @@
                 customerFirstName: document.getElementById('firstName').value,
                 customerLastName: document.getElementById('lastName').value,
                 customerPhoneNumber: document.getElementById('phoneNumber').value,
-                customerEmail: "customer@example.com", // Replace with actual customer email if available
-                rideChoice: rideChoice,
+                customerEmail: "customer@example.com",
+                rideOption: rideOption,
                 numPassengers: document.getElementById('numPassengers').value,
-                ...(rideChoice === 'ROUND TRIP' && {
-                    dropoffLocation2: document.getElementById('dropoffLocation2').value
+                ...(rideOption === 'HOURLY SERVICE' && {
+                    carType: document.getElementById('carType').textContent,
+                    serviceHours: document.getElementById('serviceHours').value
                 }),
-                ...((rideChoice === 'TO AIRPORT' || rideChoice === 'FROM AIRPORT') && {
-                    flightNumber: document.getElementById('flightNumber').value
-                }),
+                ...(rideOption === 'FROM AIRPORT' && {
+                    airline: airline, // Add airline details for airport pickup
+                    flightNumber: flightNumber // Add flight number details
+                })
             };
 
             fetch('/api/create-checkout', {
@@ -260,117 +361,130 @@
                 }),
                 credentials: 'include', // Ensure credentials (cookies, etc.) are sent with the request
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.checkoutUrl) {
-                    window.location.href = data.checkoutUrl;
-                } else {
-                    alert('An error occurred during the payment process.');
-                }
-            })
-            .catch(error => {
-                console.error('Error in Stripe Checkout:', error);
-                alert('An error occurred while processing your payment. Please try again.');
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.checkoutUrl) {
+                        window.location.href = data.checkoutUrl;
+                    } else {
+                        alert('An error occurred during the payment process.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error in Stripe Checkout:', error);
+                    alert('An error occurred while processing your payment. Please try again.');
+                });
 
         }
 
-        function calculateDistance(origins, destinations, callback) {
-            const service = new google.maps.DistanceMatrixService();
-            service.getDistanceMatrix({
-                origins: [origins],
-                destinations: [destinations],
-                travelMode: 'DRIVING',
-                unitSystem: google.maps.UnitSystem.IMPERIAL
-            }, function(response, status) {
-                if (status === 'OK') {
-                    const distanceInMiles = response.rows[0].elements[0].distance.value / 1609.34;
-                    console.log("Calculated Distance:", distanceInMiles); 
-                    callback(distanceInMiles);
-                } else {
-                    alert('Could not calculate distance. Please try again.');
-                }
-            });
+        // function calculateDistance(origins = '', destinations = '', callback) {
+        //     const service = new google.maps.DistanceMatrixService();
+        //     service.getDistanceMatrix({
+        //         origins: [origins],
+        //         destinations: [destinations],
+        //         travelMode: 'DRIVING',
+        //         unitSystem: google.maps.UnitSystem.IMPERIAL
+        //     }, function (response, status) {
+        //         if (status === 'OK') {
+        //             const distanceInMiles = response.rows[0].elements[0].distance.value / 1609.34;
+        //             console.log("Calculated Distance:", distanceInMiles);
+        //             callback(distanceInMiles);
+        //         } else {
+        //             alert('Could not calculate distance. Please try again.');
+        //         }
+        //     });
+        // }
+
+        function calculateDistance(origins = '', destinations = '', callback) {
+            if (typeof callback !== 'function') {
+                console.warn("Callback is not a function. Using default no-op function.");
+                callback = function () { };
+            }
+            if (!origins || !destinations) {
+                console.log("distance: 10 miles");
+                callback(10);
+                return;
+            }
+
+            // const service = new google.maps.DistanceMatrixService();
+            // service.getDistanceMatrix({
+            //     origins: [origins],
+            //     destinations: [destinations],
+            //     travelMode: 'DRIVING',
+            //     unitSystem: google.maps.UnitSystem.IMPERIAL
+            // }, function (response, status) {
+            //     if (status === 'OK') {
+            //         const distanceInMiles = response.rows[0].elements[0].distance.value / 1609.34;
+            //         console.log("Calculated Distance:", distanceInMiles);
+            //         callback(distanceInMiles);
+            //     } else {
+            //         alert('Could not calculate distance. Please try again.');
+            //     }
+            // });
         }
-        function getUnitPrice(distance, type) {
+
+
+        function getUnitPrice(distance, type, carType) {
+            console.log("carType", carType);
+
             let unitPrice = 0;
             let priceMap = {
-                "oneway": [
-                    {
-                        distanceGreaterEqual: 1,
-                        distanceLessEqual: 10,
-                        price: 5
-                    },
-                    {
-                        distanceGreaterEqual: 11,
-                        distanceLessEqual: 22,
-                        price: 4
-                    },
-                    {
-                        distanceGreaterEqual: 23,
-                        price: 3
-                    }
+                "BlueFox": [
+                    { distanceGreaterEqual: 0, distanceLessEqual: 7, price: 6.5 },
+                    { distanceGreaterEqual: 7.1, distanceLessEqual: 10, price: 6 },
+                    { distanceGreaterEqual: 10.1, distanceLessEqual: 12, price: 5 },
+                    { distanceGreaterEqual: 12.1, distanceLessEqual: 18, price: 4 },
+                    { distanceGreaterEqual: 18.1, distanceLessEqual: 23, price: 3.5 },
+                    { distanceGreaterEqual: 23.1, distanceLessEqual: 34, price: 3 },
+                    { distanceGreaterEqual: 34.1, price: 2.5 }
                 ],
-                'round': [
-                    {
-                        distanceGreaterEqual: 1,
-                        distanceLessEqual: 30,
-                        price: 6.5
-                    },
-                    {
-                        distanceGreaterEqual: 31,
-                        distanceLessEqual: 50,
-                        price: 4
-                    },
-                    {
-                        distanceGreaterEqual: 51,
-                        distanceLessEqual: 70,
-                        price: 3
-                    },
-                    {
-                        distanceGreaterEqual: 70,
-                        price: 2.5
-                    }
+                "SilverFox": [
+                    { distanceGreaterEqual: 0, distanceLessEqual: 7, price: 7.5 },
+                    { distanceGreaterEqual: 7.1, distanceLessEqual: 10, price: 7 },
+                    { distanceGreaterEqual: 10.1, distanceLessEqual: 12, price: 6 },
+                    { distanceGreaterEqual: 12.1, distanceLessEqual: 18, price: 4.5 },
+                    { distanceGreaterEqual: 18.1, distanceLessEqual: 23, price: 4 },
+                    { distanceGreaterEqual: 23.1, distanceLessEqual: 34, price: 3.5 },
+                    { distanceGreaterEqual: 34.1, price: 3 }
                 ],
-                "airport": [
-                    {
-                        distanceGreaterEqual: 1,
-                        distanceLessEqual: 10,
-                        price: 5
-                    },
-                    {
-                        distanceGreaterEqual: 11,
-                        distanceLessEqual: 22,
-                        price: 4
-                    },
-                    {
-                        distanceGreaterEqual: 23,
-                        price: 3
-                    }
+                "BlackFox": [
+                    { distanceGreaterEqual: 0, distanceLessEqual: 7, price: 8.5 },
+                    { distanceGreaterEqual: 7.1, distanceLessEqual: 10, price: 8 },
+                    { distanceGreaterEqual: 10.1, distanceLessEqual: 12, price: 7 },
+                    { distanceGreaterEqual: 12.1, distanceLessEqual: 18, price: 5 },
+                    { distanceGreaterEqual: 18.1, distanceLessEqual: 23, price: 4.5 },
+                    { distanceGreaterEqual: 23.1, distanceLessEqual: 34, price: 4 },
+                    { distanceGreaterEqual: 34.1, price: 3.5 }
                 ]
-            }
-            priceMap[type].map((item) => {
-                if(item.distanceLessEqual !== undefined) {
-                    if(item.distanceGreaterEqual <= distance &&  distance <= item.distanceLessEqual ) {
+            };
+
+            priceMap[carType].forEach((item) => {
+                if (item.distanceLessEqual !== undefined) {
+                    if (item.distanceGreaterEqual <= distance && distance <= item.distanceLessEqual) {
                         unitPrice = item.price;
                     }
                 } else {
-                    if(item.distanceGreaterEqual <= distance ) {
+                    if (item.distanceGreaterEqual <= distance) {
                         unitPrice = item.price;
                     }
                 }
             });
-            console.log("Debugger", distance, unitPrice, type);
+
+            console.log("Debugger:", distance, unitPrice, type, carType);
             return unitPrice;
         }
-        function calculatePrice(totalDistance, type) {
+        function calculatePrice(totalDistance, type, carType) {
             if (isNaN(totalDistance) || totalDistance <= 0) {
                 console.error('Invalid distance for price calculation:', totalDistance);
                 return 0; // Default to 0 or a safe fallback
             }
-            //return totalDistance > 50 ? totalDistance * 3 : totalDistance * 2.5;
-            return totalDistance * getUnitPrice(totalDistance, type)
+
+            if (type === "hourly") {
+                return totalDistance * hourlyRates[carType.toLowerCase()];
+            }
+
+            return totalDistance * getUnitPrice(totalDistance, type, carType);
         }
+
 
         const pickupDateInput = document.getElementById('pickupDate');
         const pickupTimeInput = document.getElementById('pickupTime');
@@ -385,6 +499,40 @@
             console.log(`Selected time: ${selectedTime}`);
         });
     </script>
-
 </body>
+
 </html>
+
+
+
+<!-- Rates by Vehicle Type:
+
+BlueFox
+	•	0 mi - 7 mi: $6.5
+	•	7.1 mi - 10 mi: $6
+	•	10.1 mi - 12 mi: $5
+	•	12.1 mi - 18 mi: $4
+	•	18.1 mi - 23 mi: $3.5
+	•	23.1 mi - 34 mi: $3
+	•	34.1 mi - up: $2.5
+	•	Hourly: $50
+
+SilverFox
+	•	0 mi - 7 mi: $7.5
+	•	7.1 mi - 10 mi: $7
+	•	10.1 mi - 12 mi: $6
+	•	12.1 mi - 18 mi: $4.5
+	•	18.1 mi - 23 mi: $4
+	•	23.1 mi - 34 mi: $3.5
+	•	34.1 mi - up: $3
+	•	Hourly: $60
+
+BlackFox
+	•	0 mi - 7 mi: $8.5
+	•	7.1 mi - 10 mi: $8
+	•	10.1 mi - 12 mi: $7
+	•	12.1 mi - 18 mi: $5
+	•	18.1 mi - 23 mi: $4.5
+	•	23.1 mi - 34 mi: $4
+	•	34.1 mi - up: $3.5
+	•	Hourly: $70 -->
