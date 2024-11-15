@@ -57,7 +57,7 @@
                         <a href="#" id="hourlyService">Hourly Service</a>
                         <a href="#" id="chauffeur">Chauffeur</a>
                     </div>
-                    <div class="car-type">
+                    <div class="car-type" style="display: none;">
                         <h2>SELECT YOUR RIDE OPTION</h2>
                         <button type="button" id="carType">CAR TYPE</button>
                         <div id="carTypeDropdown" class="dropdown-content">
@@ -79,6 +79,9 @@
                     <input type="text" id="firstName" placeholder="First Name">
                     <input type="text" id="lastName" placeholder="Last Name">
                     <input type="text" id="phoneNumber" placeholder="Phone Number">
+                    <input type="number" id="serviceHours" placeholder="Number of Hours" min="1"
+                        style="display:none;" />
+
                 </div>
 
 
@@ -113,14 +116,6 @@
 
     <script>
 
-        // Hourly rates for different car types and services
-        const hourlyRates = {
-            "chauffeur": 50,
-            "blueFox": 55,
-            "silverFox": 60,
-            "blackFox": 70,
-            "foxPack": 130
-        };
 
         function initializeGooglePlaces() {
             const input1 = document.getElementById('pickupLocation');
@@ -140,7 +135,8 @@
         function setupRideChoiceListeners() {
             const carTypeDiv = document.querySelector('.car-type');
             const dropoffLocation1Input = document.getElementById('dropoffLocation1');
-            const flightDetailsContainer = document.getElementById('flightDetailsContainer'); // New section for flight details
+            const flightDetailsContainer = document.getElementById('flightDetailsContainer');
+            const serviceHoursInput = document.getElementById('serviceHours');
 
             document.getElementById('rideChoiceBtn').addEventListener('click', function () {
                 document.getElementById('rideChoiceDropdown').classList.toggle('show');
@@ -148,43 +144,66 @@
 
             document.getElementById('oneWay').addEventListener('click', function () {
                 document.getElementById('rideChoiceBtn').textContent = "ONE WAY";
-                carTypeDiv.style.display = 'none';
+                carTypeDiv.style.display = 'block'; // Hide by default for one-way
                 dropoffLocation1Input.style.display = 'block';
-                flightDetailsContainer.style.display = 'none'; // Hide flight details
+                flightDetailsContainer.style.display = 'none';
+                serviceHoursInput.style.display = 'none';
                 document.getElementById('rideChoiceDropdown').classList.remove('show');
             });
 
             document.getElementById('toAirport').addEventListener('click', function () {
                 document.getElementById('rideChoiceBtn').textContent = "TO AIRPORT";
-                carTypeDiv.style.display = 'none';
+                carTypeDiv.style.display = 'block'; // Hide by default for to-airport
                 dropoffLocation1Input.style.display = 'block';
-                flightDetailsContainer.style.display = 'none'; // Hide flight details
+                flightDetailsContainer.style.display = 'none';
+                serviceHoursInput.style.display = 'none';
                 document.getElementById('rideChoiceDropdown').classList.remove('show');
             });
 
             document.getElementById('fromAirport').addEventListener('click', function () {
                 document.getElementById('rideChoiceBtn').textContent = "FROM AIRPORT";
-                carTypeDiv.style.display = 'none';
-                dropoffLocation1Input.style.display = 'block'; // Hide drop-off location 1 input for airport pickups
-                flightDetailsContainer.style.display = 'block'; // Show flight details (airline and flight number)
+                carTypeDiv.style.display = 'block'; // Hide by default for from-airport
+                dropoffLocation1Input.style.display = 'block';
+                flightDetailsContainer.style.display = 'block';
+                serviceHoursInput.style.display = 'none';
                 document.getElementById('rideChoiceDropdown').classList.remove('show');
             });
 
             document.getElementById('hourlyService').addEventListener('click', function () {
                 document.getElementById('rideChoiceBtn').textContent = "Hourly Service";
-                carTypeDiv.style.display = 'block';
-                dropoffLocation1Input.style.display = 'block';
-                flightDetailsContainer.style.display = 'none'; // Hide flight details for hourly service
+                carTypeDiv.style.display = 'block'; // Show car type for hourly service
+                dropoffLocation1Input.style.display = 'none';
+                flightDetailsContainer.style.display = 'none';
+                serviceHoursInput.style.display = 'block';
                 document.getElementById('rideChoiceDropdown').classList.remove('show');
             });
 
+            // document.getElementById('chauffeur').addEventListener('click', function () {
+            //     document.getElementById('rideChoiceBtn').textContent = "Chauffeur";
+            //     carTypeDiv.style.display = 'none'; // Hide by default for chauffeur
+            //     dropoffLocation1Input.style.display = 'none';
+            //     flightDetailsContainer.style.display = 'none';
+            //     serviceHoursInput.style.display = 'block';
+            //     document.getElementById('rideChoiceDropdown').classList.remove('show');
+            // });
             document.getElementById('chauffeur').addEventListener('click', function () {
                 document.getElementById('rideChoiceBtn').textContent = "Chauffeur";
-                carTypeDiv.style.display = 'none';
+                carTypeDiv.style.display = 'none'; // Hide car type div when 'Chauffeur' is selected
                 dropoffLocation1Input.style.display = 'none';
-                flightDetailsContainer.style.display = 'none'; // Hide flight details for chauffeur
+                flightDetailsContainer.style.display = 'none';
+                serviceHoursInput.style.display = 'block'; // Show service hours input
+
+                // Hide the warning message if it is visible
+                const warningMessage = document.getElementById('warning-message');
+                warningMessage.style.display = 'none';
+
+                // Re-enable the submit button if it was hidden
+                document.querySelector('.cta-button').style.display = 'block';
+
                 document.getElementById('rideChoiceDropdown').classList.remove('show');
             });
+
+
         }
 
 
@@ -223,7 +242,7 @@
             });
 
             // Reset the warning message and re-enable the submit button when a different car type is selected
-            ['blueFox', 'silverFox', 'blackFox'].forEach(id => {
+            ['blueFox', 'silverFox', 'blackFox']?.forEach(id => {
                 document.getElementById(id).addEventListener('click', function () {
                     document.getElementById('carType').textContent = this.textContent;
                     document.getElementById('carTypeDropdown').classList.remove('show');
@@ -237,6 +256,7 @@
 
         }
 
+
         document.getElementById('booking-form').addEventListener('submit', function (event) {
             event.preventDefault();
 
@@ -248,35 +268,30 @@
             const warningMessage = document.getElementById('warning-message');
             const rideOption = document.getElementById('rideChoiceBtn')?.textContent.trim();
             const numPassengers = parseInt(document.getElementById('numPassengers')?.value, 10);
-            const serviceHours = document.getElementById('serviceHours')?.value;
             const carType = document.getElementById('carType')?.textContent.trim();
             const airline = document.getElementById('airline')?.value; // Airline input
             const flightNumber = document.getElementById('flightNumber')?.value; // Flight number input
+            const NoOfHour = document.getElementById("serviceHours")?.value
 
             const today = new Date().toISOString().split('T')[0];
 
-
-
             if (
-
                 !pickupLocation ||
-
-                (rideOption !== "Chauffeur" && !dropoffLocation1) ||
-                (rideOption === "HOURLY SERVICE" && (!serviceHours || !carType))
+                (rideOption === "Hourly Service" && (!NoOfHour || !carType)) ||
+                (rideOption === "ONE WAY" && !dropoffLocation1) ||
+                (rideOption === "FROM AIRPORT" && (!flightNumber || !airline || !dropoffLocation1)) ||
+                (rideOption === "TO AIRPORT" && !dropoffLocation1) ||
+                (rideOption === "Chauffeur" && !NoOfHour) ||
+                !pickupDate ||
+                !pickupTime ||
+                isNaN(numPassengers) || numPassengers <= 0
             ) {
                 warningMessage.textContent = "Please fill in all required fields.";
                 warningMessage.style.display = 'block';
                 return;
             }
-            // if (
-            //     !pickupLocation ||
-            //     (rideOption !== "HOURLY SERVICE" && !dropoffLocation1) ||
-            //     (rideOption === "HOURLY SERVICE" && (!serviceHours || !carType))
-            // ) {
-            //     warningMessage.textContent = "Please fill in all required fields.";
-            //     warningMessage.style.display = 'block';
-            //     return;
-            // }
+
+
             if (numPassengers > 4) {
                 alert("For parties larger than 4 passengers, please reach out to us directly.");
                 return;
@@ -297,26 +312,59 @@
             warningMessage.style.display = 'none';
 
 
-            if (rideOption == "Hourly Service") {
 
-                let price =
-                    carType === "Blue Fox" ? 55 :
-                        carType === "Silver Fox" ? 60 :
-                            carType === "Black Fox" ? 70 :
-                                carType === "Fox Pack" ? 130 :
-                                    "";
+
+            if (rideOption === "Hourly Service") {
+
+                if (carType == "CAR TYPE" || carType == "") {
+                    alert("Please select a car type.");
+                    return;
+                }
+                
+                
+                let hourlyRate;
+                switch (carType) {
+                    case "Blue Fox":
+                        hourlyRate = 50;
+                        break;
+                    case "Silver Fox":
+                        hourlyRate = 60;
+                        break;
+                    case "Black Fox":
+                        hourlyRate = 70;
+                        break;
+                    case "Fox Pack":
+                        hourlyRate = 130;
+                        break;
+                    default:
+                        hourlyRate = 0;
+                }
+                let price = hourlyRate * NoOfHour;
+                
                 createStripeCheckout(price, airline, flightNumber);
-                ;
-            }
-            calculateDistance(pickupLocation, dropoffLocation1, function (distance) {
-                const price = calculatePrice(
-                    distance,
-                    rideOption === 'HOURLY SERVICE' ? 'hourly' : rideOption === 'One Way' ? 'oneway' : 'airport',
-                    carType
-                );
 
-                createStripeCheckout(price, airline, flightNumber); // Include airline and flight number in checkout
-            });
+            } else if (rideOption === "Chauffeur") {
+                let price = 50 * NoOfHour;
+                createStripeCheckout(price, airline, flightNumber);
+            } else
+                if (carType == "CAR TYPE" || carType == "") {
+                    alert("Please select a car type.");
+                    return;
+                } {
+
+
+                calculateDistance(pickupLocation, dropoffLocation1, function (distance) {
+
+                    const price = calculatePrice(
+                        distance,
+                        rideOption === 'ONE WAY' ? 'oneway' : 'airport',
+                        carType
+                    );
+
+                    createStripeCheckout(price, airline, flightNumber);
+                });
+
+            }
         });
         function uuidv4() {
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -339,7 +387,7 @@
                 customerEmail: "customer@example.com",
                 rideOption: rideOption,
                 numPassengers: document.getElementById('numPassengers').value,
-                ...(rideOption === 'HOURLY SERVICE' && {
+                ...(rideOption === 'Hourly Service' && {
                     carType: document.getElementById('carType').textContent,
                     serviceHours: document.getElementById('serviceHours').value
                 }),
@@ -376,7 +424,13 @@
 
         }
 
-        // function calculateDistance(origins = '', destinations = '', callback) {
+        function calculateDistance(origins, destinations, callback) {
+            const distanceInMiles = 10;
+            callback(distanceInMiles);
+        }
+
+
+        // function calculateDistance(origins , destinations , callback) {
         //     const service = new google.maps.DistanceMatrixService();
         //     service.getDistanceMatrix({
         //         origins: [origins],
@@ -394,41 +448,17 @@
         //     });
         // }
 
-        function calculateDistance(origins = '', destinations = '', callback) {
-            if (typeof callback !== 'function') {
-                console.warn("Callback is not a function. Using default no-op function.");
-                callback = function () { };
-            }
-            if (!origins || !destinations) {
-                console.log("distance: 10 miles");
-                callback(10);
-                return;
-            }
-
-            // const service = new google.maps.DistanceMatrixService();
-            // service.getDistanceMatrix({
-            //     origins: [origins],
-            //     destinations: [destinations],
-            //     travelMode: 'DRIVING',
-            //     unitSystem: google.maps.UnitSystem.IMPERIAL
-            // }, function (response, status) {
-            //     if (status === 'OK') {
-            //         const distanceInMiles = response.rows[0].elements[0].distance.value / 1609.34;
-            //         console.log("Calculated Distance:", distanceInMiles);
-            //         callback(distanceInMiles);
-            //     } else {
-            //         alert('Could not calculate distance. Please try again.');
-            //     }
-            // });
-        }
-
-
         function getUnitPrice(distance, type, carType) {
-            console.log("carType", carType);
+
 
             let unitPrice = 0;
+
+            // Normalize carType to lowercase and remove spaces
+            const carTypeFormatted = carType.replace(/\s+/g, '').toLowerCase();
+
+            // Define the price map for different car types
             let priceMap = {
-                "BlueFox": [
+                "bluefox": [
                     { distanceGreaterEqual: 0, distanceLessEqual: 7, price: 6.5 },
                     { distanceGreaterEqual: 7.1, distanceLessEqual: 10, price: 6 },
                     { distanceGreaterEqual: 10.1, distanceLessEqual: 12, price: 5 },
@@ -437,7 +467,7 @@
                     { distanceGreaterEqual: 23.1, distanceLessEqual: 34, price: 3 },
                     { distanceGreaterEqual: 34.1, price: 2.5 }
                 ],
-                "SilverFox": [
+                "silverfox": [
                     { distanceGreaterEqual: 0, distanceLessEqual: 7, price: 7.5 },
                     { distanceGreaterEqual: 7.1, distanceLessEqual: 10, price: 7 },
                     { distanceGreaterEqual: 10.1, distanceLessEqual: 12, price: 6 },
@@ -446,7 +476,7 @@
                     { distanceGreaterEqual: 23.1, distanceLessEqual: 34, price: 3.5 },
                     { distanceGreaterEqual: 34.1, price: 3 }
                 ],
-                "BlackFox": [
+                "blackfox": [
                     { distanceGreaterEqual: 0, distanceLessEqual: 7, price: 8.5 },
                     { distanceGreaterEqual: 7.1, distanceLessEqual: 10, price: 8 },
                     { distanceGreaterEqual: 10.1, distanceLessEqual: 12, price: 7 },
@@ -457,33 +487,53 @@
                 ]
             };
 
-            priceMap[carType].forEach((item) => {
-                if (item.distanceLessEqual !== undefined) {
-                    if (item.distanceGreaterEqual <= distance && distance <= item.distanceLessEqual) {
-                        unitPrice = item.price;
+            // Check if carType exists in priceMap
+            if (priceMap[carTypeFormatted]) {
+                // Find the appropriate price based on the distance range
+                priceMap[carTypeFormatted].forEach((item) => {
+                    console.log("Checking item:", item); // Debug each price range check
+                    if (item.distanceLessEqual !== undefined) {
+                        if (item.distanceGreaterEqual <= distance && distance <= item.distanceLessEqual) {
+                            unitPrice = item.price;
+                            console.log("Matched price:", unitPrice); // Log matched price
+                        }
+                    } else {
+                        if (item.distanceGreaterEqual <= distance) {
+                            unitPrice = item.price;
+                            console.log("Matched price:", unitPrice); // Log matched price
+                        }
                     }
-                } else {
-                    if (item.distanceGreaterEqual <= distance) {
-                        unitPrice = item.price;
-                    }
-                }
-            });
+                });
+            } else {
+                console.error("Invalid carType:", carType); // If carType doesn't exist in priceMap
+            }
 
-            console.log("Debugger:", distance, unitPrice, type, carType);
+            console.log("Final unitPrice:", unitPrice); // Log the final unitPrice
             return unitPrice;
         }
         function calculatePrice(totalDistance, type, carType) {
+
             if (isNaN(totalDistance) || totalDistance <= 0) {
                 console.error('Invalid distance for price calculation:', totalDistance);
                 return 0; // Default to 0 or a safe fallback
             }
+            // Get the current hour
+            const currentHour = new Date().getHours();
 
-            if (type === "hourly") {
-                return totalDistance * hourlyRates[carType.toLowerCase()];
+
+            // Check if the current time is after 11 PM or before 5 AM
+            let additionalFee = 0;
+            if (currentHour >= 23 || currentHour < 5) {
+                additionalFee = 10;
             }
 
-            return totalDistance * getUnitPrice(totalDistance, type, carType);
+            // Calculate the base price
+            let basePrice = totalDistance * getUnitPrice(totalDistance, type, carType);
+
+            // Add the additional fee if applicable
+            return basePrice + additionalFee;
         }
+
 
 
         const pickupDateInput = document.getElementById('pickupDate');
@@ -502,37 +552,3 @@
 </body>
 
 </html>
-
-
-
-<!-- Rates by Vehicle Type:
-
-BlueFox
-	•	0 mi - 7 mi: $6.5
-	•	7.1 mi - 10 mi: $6
-	•	10.1 mi - 12 mi: $5
-	•	12.1 mi - 18 mi: $4
-	•	18.1 mi - 23 mi: $3.5
-	•	23.1 mi - 34 mi: $3
-	•	34.1 mi - up: $2.5
-	•	Hourly: $50
-
-SilverFox
-	•	0 mi - 7 mi: $7.5
-	•	7.1 mi - 10 mi: $7
-	•	10.1 mi - 12 mi: $6
-	•	12.1 mi - 18 mi: $4.5
-	•	18.1 mi - 23 mi: $4
-	•	23.1 mi - 34 mi: $3.5
-	•	34.1 mi - up: $3
-	•	Hourly: $60
-
-BlackFox
-	•	0 mi - 7 mi: $8.5
-	•	7.1 mi - 10 mi: $8
-	•	10.1 mi - 12 mi: $7
-	•	12.1 mi - 18 mi: $5
-	•	18.1 mi - 23 mi: $4.5
-	•	23.1 mi - 34 mi: $4
-	•	34.1 mi - up: $3.5
-	•	Hourly: $70 -->

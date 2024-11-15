@@ -1023,3 +1023,27 @@ footer {
         margin-top: -12px;
     }
 }
+
+/* New code added from here */
+.car-type {
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.car-type h2 {
+    color: #fff;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+#carType {
+    background-color: #d1ff00;
+    color: #000; 
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
