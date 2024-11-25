@@ -31,6 +31,7 @@ app.get('/thank-you.html', (req, res) => {
 
 app.post('/create-checkout', async (req, res) => {
   const { price, idempotencyKey, reservationDetails } = req.body;
+  console.log("reservationDetails", reservationDetails);
 
   try {
     const order = {
@@ -45,7 +46,7 @@ app.post('/create-checkout', async (req, res) => {
           },
         },
       ],
-      note: `Pickup Location: ${reservationDetails.pickupLocation}, Dropoff Location: ${reservationDetails.dropoffLocation}, Pickup Date: ${reservationDetails.pickupDate}, Pickup Time: ${reservationDetails.pickupTime}, First Name: ${reservationDetails.customerFirstName}, Last Name: ${reservationDetails.customerLastName}, Phone: ${reservationDetails.customerPhoneNumber}`,
+      note: `Pickup Location: ${reservationDetails.pickupLocation}, Dropoff Location: ${reservationDetails.dropoffLocation}, Pickup Date: ${reservationDetails.pickupDate}, Pickup Time: ${reservationDetails.pickupTime}, First Name: ${reservationDetails.customerFirstName}, Last Name: ${reservationDetails.customerLastName}, Phone: ${reservationDetails.customerPhoneNumber}, Hours: ${reservationDetails.serviceHours}`,
     };
 
     const body = {
@@ -54,6 +55,7 @@ app.post('/create-checkout', async (req, res) => {
     };
 
     const checkoutResponse = await client.checkoutApi.createPaymentLink(body);
+    console.log("checkoutResponse", checkoutResponse);
     const checkoutUrl = checkoutResponse.result.paymentLink.url;
 
     // Send the checkout URL to the client
@@ -72,6 +74,7 @@ app.post('/payment-confirmation', (req, res) => {
 
     // Parse the note to extract reservation details
     const note = paymentDetails.note || '';
+    console.log("note", note);
     const reservationDetails = {
       pickupLocation: extractField(note, 'Pickup Location'),
       dropoffLocation: extractField(note, 'Dropoff Location'),
@@ -133,39 +136,40 @@ function sendEmailNotification(reservationDetails) {
       to: process.env.NOTIFICATION_EMAIL,
       subject: 'New Reservation with Calendar Event',
       text: `Reservation Details:
-First Name: ${reservationDetails.customerFirstName}
-Last Name: ${reservationDetails.customerLastName}
-Phone Number: ${reservationDetails.customerPhoneNumber}
-Pickup Location: ${reservationDetails.pickupLocation}
-Dropoff Location: ${reservationDetails.dropoffLocation}
-Pickup Date: ${reservationDetails.pickupDate}
-Pickup Time: ${reservationDetails.pickupTime}
+  First Name: ${reservationDetails.customerFirstName}
+  Last Name: ${reservationDetails.customerLastName}
+  Phone Number: ${reservationDetails.customerPhoneNumber}
+  Pickup Location: ${reservationDetails.pickupLocation}
+  Dropoff Location: ${reservationDetails.dropoffLocation}
+  Pickup Date: ${reservationDetails.pickupDate}
+  Pickup Time: ${reservationDetails.pickupTime}
 
-Click the attached file to add this reservation to your calendar.`,
-      icalEvent: {
-        filename: 'reservation.ics',
-        method: 'request',
-        content: value,
-      },
-    };
+  Click the attached file to add this reservation to your calendar.`,
+        icalEvent: {
+          filename: 'reservation.ics',
+          method: 'request',
+          content: value,
+        },
+      };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log('Error sending email:', error);
-      } else {
-        console.log('Email sent with calendar event:', info.response);
-      }
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log('Error sending email:', error);
+        } else {
+          console.log('Email sent with calendar event:', info.response);
+        }
+      });
     });
-  });
-}
+  }
 
-// Function to send SMS using Bird API (optional)
-function sendSMSNotification(reservationDetails) {
-  const message = `New Reservation:
-Pickup: ${reservationDetails.pickupLocation}
-Dropoff: ${reservationDetails.dropoffLocation}
-Date: ${reservationDetails.pickupDate}
-Time: ${reservationDetails.pickupTime}`;
+  // Function to send SMS using Bird API (optional)
+  function sendSMSNotification(reservationDetails) {
+    const message = `New Reservation:
+  Pickup: ${reservationDetails.pickupLocation}
+  Dropoff: ${reservationDetails.dropoffLocation}
+  Date: ${reservationDetails.pickupDate}
+  Time: ${reservationDetails.pickupTime}
+  Service Hours: ${reservationDetails.serviceHours}`;
 
   const options = {
     method: 'POST',
