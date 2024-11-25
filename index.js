@@ -79,8 +79,8 @@ app.post('/api/create-checkout', async (req, res) => {
               quantity: 1,
           }],
           mode: 'payment',
-          success_url: 'http://localhost:3000//thank-you.html',
-          cancel_url: 'http://localhost:3000/book.html',
+          success_url: 'https://www.silverfoxrides.com/thank-you.html',
+          cancel_url: 'https://www.silverfoxrides.com/book.html',
           metadata: {
               reservationDetails: JSON.stringify(reservationDetails),
           },
