@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
         pass: process.env.EMAIL_PASS,
     },
 });
-
+/* new */
 const mailOptions = {
     from: process.env.EMAIL_USER,
     to: process.env.NOTIFICATION_EMAIL,
