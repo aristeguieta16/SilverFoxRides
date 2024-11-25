@@ -164,10 +164,11 @@ nav {
 .hero {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start; /* Align items at the top */
+    align-items: center; /* Align items at the top */
     padding: clamp(5vw, 5vw, 150px) 0; /* Adjust the padding to add space at the top */
     background-color: black;
     position: relative;
+    height: 84vh;
 }
 
 .hero-text {
@@ -212,6 +213,7 @@ nav {
     border-radius: 10px;
     font-family: 'Montserrat', sans-serif;
     margin-top: 30px;
+    margin: auto;
 }
 
 .cta-button:hover {
@@ -223,6 +225,7 @@ nav {
     right: -250px;  */
     bottom: 0; 
     z-index: 1;
+    margin-right: -15px;
 }
 
 /* .hero-image img {
@@ -467,9 +470,9 @@ form#booking-form .form-group {
 form#booking-form .form-group > * {
     max-width: calc(50% - 10px);
 }
-form#booking-form .form-group > input#phoneNumber {
+/* form#booking-form .form-group > input#phoneNumber {
     min-width: 100%;
-}
+} */
 form#booking-form .passengers-container {
     margin-bottom: 20px;
 }
@@ -518,7 +521,58 @@ form#booking-form .passengers-input {
     border: none;
     margin-bottom: 30px;
 }
+.selectCars{
+    display: flex;
+    justify-content: center;
+}
+.carTypeBox img{
+ width: 100%;
+}
 
+.carChoiceBtn{
+    background-color: yellow;
+    color: black;
+    padding: 5px 45px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
+    border: none;
+    margin-bottom: 30px;   
+    display: flex;
+    justify-content: center;
+}
+input[name=carType] {
+    margin: 0 15px!important;
+}
+.carTypeImgBox{
+    height: 100px;
+}
+.blueFoxCarImg{
+    transform: scale(1.6);
+}
+.carTypeImgBox img {
+    transition: transform 0.3s ease; 
+}
+.carTypeImgBox img:hover {
+    transform: scale(1.2);
+}
+.blueFoxCarImg:hover {
+    transform: scale(1.9) !important;
+}
+.carTypeBox:hover .blueFoxCarImg {
+    transform: scale(1.9) !important;
+}
+.carTypeBox:hover .carTypeImgBox img {
+    transform: scale(1.2);
+}
+.carChoiceBtn {
+    transition: transform 0.3s ease;
+}
+.carTypeBox:hover .carChoiceBtn {
+    transform: scale(1); /* Button stays the same size, no scaling */
+}
 /* Adjust dropdown positioning */
 .ride-choice {
     position: relative;
@@ -591,6 +645,7 @@ form#booking-form .passengers-input {
 form#booking-form input[type="text"],
 form#booking-form input[type="date"],
 form#booking-form input[type="time"],
+form#booking-form input[type="email"],
 form#booking-form input[type="number"] {
     width: 100%; /* Full width of the grid cell */
     padding: 15px;
@@ -1022,6 +1077,20 @@ footer {
     div#dropoffLocation2Container, div#flightNumberContainer {
         margin-top: -12px;
     }
+    .selectCars{
+        flex-direction: column;
+    }
+    .carTypeBox img{
+        width: 150px;
+        margin: 20px 0;
+    }
+    .carChoiceBtn{
+        width: 200px;
+        margin: auto;
+    }
+    .hero{
+        height: auto;
+    }
 }
 
 /* New code added from here */
@@ -1034,7 +1103,7 @@ footer {
 .car-type h2 {
     color: #fff;
     font-size: 24px;
-    margin-bottom: 15px;
+    margin-bottom: 40px;
 }
 
 #carType {
