@@ -98,8 +98,16 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="date" id="pickupDate" placeholder="Pick-Up Date">
-                    <input type="time" id="pickupTime" placeholder="Pick-Up Time">
+                    <!-- <input type="date" id="pickupDate" placeholder="Pick-Up Date"> -->
+                    <div class="date-picker">
+                        <input type="date" id="pickupDate" required="">
+                        <span class="placeholder">Pick-Up Date</span>
+                      </div>
+                    <!-- <input type="time" id="pickupTime" placeholder="Pick-Up Time"> -->
+                    <div class="time-picker">
+                        <input type="time" id="pickupTime" required>
+                        <span class="placeholder">Pick-Up Time</span>
+                      </div>
                     <input type="text" id="pickupLocation" placeholder="Pick-Up Location" />
                     <input type="text" id="dropoffLocation1" placeholder="Drop-Off Location" />
                     <input type="text" id="firstName" placeholder="First Name">
@@ -126,6 +134,7 @@
                     </label>
                 </div>
                 <div id="warning-message" class="warning-message"></div>
+                <div id="warning-alert" class="warning-alert"></div>
                 <button type="submit" class="cta-button">CHECK OUT</button>
             </form>
         </section>
@@ -135,6 +144,7 @@
                     class="contact-link">click here</a> to contact us via email or phone for availability.</p>
         </section>
     </main>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
@@ -251,7 +261,7 @@
                 serviceHoursInput.style.display = 'block'; // Show service hours input
 
                 // Hide the warning message if it is visible
-                const warningMessage = document.getElementById('warning-message');
+                const warningMessage = document.getElementById('warning-alert');
                 warningMessage.style.display = 'none';
 
                 // Re-enable the submit button if it was hidden
@@ -302,7 +312,9 @@
             document.getElementById('foxPack').addEventListener('click', function () {
                 document.getElementById('carType').textContent = "Fox Pack";
                 // showCarType('foxPack');
-                const warningMessage = document.getElementById('warning-message');
+                const warningMessage = document.getElementById('warning-alert');
+                console.log("warning-",warningMessage);
+                
                 warningMessage.textContent = "For Fox Pack bookings, please contact us directly for assistance.";
                 warningMessage.style.display = 'block';
                 document.querySelector('.cta-button').style.display = 'none';
@@ -312,7 +324,7 @@
                 document.getElementById(id).addEventListener('click', function () {
                     document.getElementById('carType').textContent = this.textContent;
 
-                    const warningMessage = document.getElementById('warning-message');
+                    const warningMessage = document.getElementById('warning-alert');
                     warningMessage.style.display = 'none';
                     document.querySelector('.cta-button').style.display = 'block';
                 });
@@ -325,7 +337,7 @@
             const dropoffLocation2 = document.getElementById('dropoffLocation2')?.value;
             const pickupDate = document.getElementById('pickupDate')?.value;
             const pickupTime = document.getElementById('pickupTime')?.value;
-            const warningMessage = document.getElementById('warning-message');
+            const warningMessage = document.getElementById('warning-alert');
             const rideOption = document.getElementById('rideChoiceBtn')?.textContent.trim();
             const numPassengers = parseInt(document.getElementById('numPassengers')?.value, 10);
             const carType = document.getElementById('carType')?.textContent.trim();
@@ -349,7 +361,7 @@
                 !pickupDate ||
                 !pickupTime ||
                 isNaN(numPassengers) || numPassengers <= 0
-            ) {
+            ) {//error validation
                 warningMessage.textContent = "Please fill in all required fields.";
                 warningMessage.style.display = 'block';
                 return;
@@ -385,41 +397,74 @@
 
 
 
-            if (rideOption === "Hourly Service") {
+            // if (rideOption === "Hourly Service") {
+            //     // console.log("FOUND THE CONDITION",rideOption)
+            //     console.log("carType:",carType)
+            //     console.log("NoOfHour:",NoOfHour,"serviceHours-->",serviceHours)
+            //     if (carType == "CAR TYPE" || carType == "") {
+            //         alert("Please select a car type.");
+            //         return;
+            //     }
+
+            //     let hourlyRate;
+            //     switch (carType) {
+            //         case "BLUEFOX":
+            //             hourlyRate = 50;
+            //             break;
+            //         case "SILVERFOX":
+            //             hourlyRate = 60;
+            //             break;
+            //         case "BLACKFOX":
+            //             hourlyRate = 70;
+            //             break;
+            //         case "FOXPACK":
+            //             hourlyRate = 130;
+            //             break;
+            //         default:
+            //             hourlyRate = 0;
+            //     }
+            //     let price = hourlyRate * NoOfHour;
+            //     console.log("price is =>",price)
+            //     console.log("hourlyRate is =>",hourlyRate)
+            //     // createStripeCheckout(price, airline, flightNumber, NoOfHour);
+
+            // }
+
+             if (rideOption === "Hourly Service") {
+                console.log("carType:", carType);
+                console.log("NoOfHour:", NoOfHour);
 
                 if (carType == "CAR TYPE" || carType == "") {
                     alert("Please select a car type.");
                     return;
                 }
 
-
-                let hourlyRate;
-                switch (carType) {
-                    case "Blue Fox":
-                        hourlyRate = 50;
-                        break;
-                    case "Silver Fox":
-                        hourlyRate = 60;
-                        break;
-                    case "Black Fox":
-                        hourlyRate = 70;
-                        break;
-                    case "Fox Pack":
-                        hourlyRate = 130;
-                        break;
-                    default:
-                        hourlyRate = 0;
+                if (isNaN(NoOfHour) || NoOfHour <= 0) {
+                    alert("Please provide a valid number of hours.");
+                    return;
                 }
+
+                const hourlyRates = {
+                    "BLUEFOX": 50,
+                    "SILVERFOX": 60,
+                    "BLACKFOX": 70,
+                    "FOXPACK": 130
+                };
+
+                let hourlyRate = hourlyRates[carType.toUpperCase()] || 0;
+
+                if (hourlyRate === 0) {
+                    alert("Invalid car type selected.");
+                    return;
+                }
+
                 let price = hourlyRate * NoOfHour;
 
-                createStripeCheckout(price, airline, flightNumber, NoOfHour);
 
-            } else if (rideOption === "Chauffeur") {
+            }else if (rideOption === "Chauffeur") {
                 let price = 50 * NoOfHour;
                 createStripeCheckout(price, airline, flightNumber, NoOfHour);
-                console.log("HOURS====>", NoOfHour)
-            } else
-                if (carType == "CAR TYPE" || carType == "") {
+            } else if (carType == "CAR TYPE" || carType == "") {
                     alert("Please select a car type.");
                     return;
                 } {

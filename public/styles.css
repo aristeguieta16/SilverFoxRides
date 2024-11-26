@@ -779,6 +779,21 @@ main.basicInternal_main {
     text-align: center; /* Center the text */
 }
 
+.warning-alert {
+    /* color: black;
+    background-color: #ffff00bd;
+    border: 1px solid #B22222; */
+    color: yellow;
+    background-color: #a1a18b;
+    border: 1px solid yellow;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    display: none;
+    text-align: center;
+}
+
 .contact-us {
     padding: 100px 20px;
     background-color: black;
@@ -1064,6 +1079,7 @@ footer {
         height: 50px;
         min-height: 50px;
     }
+    
     form#booking-form .form-group {
         gap: 15px;
         width: 100%;
@@ -1116,3 +1132,62 @@ footer {
     font-size: 18px;
     margin-bottom: 20px;
 }
+.date-picker .placeholder, .time-picker .placeholder {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #ccc;
+    pointer-events: none;
+    transition: 0.2s ease;
+    z-index: 2;
+}
+.date-picker input[type="date"]{
+    color: transparent !important;
+}
+.date-picker {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+.date-picker input[type="date"]:focus {
+    color: black !important;
+  }
+  
+  .date-picker input[type="date"]:focus + .placeholder,
+  .date-picker input[type="date"]:valid + .placeholder {
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+
+  .time-picker .placeholder {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #CCC;
+    pointer-events: none;
+    transition: 0.2s ease;
+    z-index: 2;
+}
+.time-picker input[type="time"]{
+    color: transparent !important;
+}
+.time-picker {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+.time-picker input[type="time"]:focus {
+    color: black !important;
+  }
+  
+  .time-picker input[type="time"]:focus + .placeholder,
+  .time-picker input[type="time"]:valid + .placeholder {
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+  
+  
