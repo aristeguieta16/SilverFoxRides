@@ -381,10 +381,11 @@
             }
 
             if (eightHoursInMillis > selectedDateTime - currentDateTime) {
-                warningMessage.textContent = "You cannot book a ride for a time less than 8 hours ago. Please select a future time.";
+                warningMessage.innerHTML = "For rides needed within the next 8 hours, please contact us directly at <a href='tel:+15129159962'>+1 512 915-9962</a> or email <a href='mailto:josepabon@silverfoxrides.com'>josepabon@silverfoxrides.com</a>. Thank You!";
                 warningMessage.style.display = 'block';
                 return;
             }
+
 
             if (!pickupDate || !pickupTime) {
                 warningMessage.textContent = "Please fill in all required information.";
