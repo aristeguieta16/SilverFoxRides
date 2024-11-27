@@ -105,9 +105,9 @@
                           placeholder="Select a date" 
                         />
                       </div> -->
-                      <input type="text" id="datePicker" placeholder="Select a date" />
+                      <input type="datetime-local" id="datePicker" placeholder="Select a date" readonly />
                     <!-- <input placeholder="Pick-Up Date" class="textbox-n" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="pickupDate" /> -->
-                    <input type="text" id="timePicker" placeholder="Select a time" />
+                    <input type="text" id="timePicker" placeholder="Select a time" readonly  />
                     <!-- <input placeholder="Pick-Up Time" class="textbox-n" type="text" onfocus="(this.type='time')" onblur="(this.type='text')" id="pickupTime" /> -->
                     <input type="text" id="pickupLocation" placeholder="Pick-Up Location" />
                     <input type="text" id="dropoffLocation1" placeholder="Drop-Off Location" />
@@ -158,22 +158,22 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-          // Initialize the date picker
-          flatpickr("#datePicker", {
-            dateFormat: "Y-m-d", // Customize the date format
-            allowInput: true,    // Allow manual input, keeping the placeholder visible
-          });
-      
-          // Initialize the time picker
-          flatpickr("#timePicker", {
-            enableTime: true,         // Enable time selection
-            noCalendar: true,         // Disable the calendar
-            dateFormat: "H:i",        // Format time as 24-hour
-            time_24hr: true,          // Use 24-hour format
-            allowInput: true,         // Allow manual input, keeping the placeholder visible
-          });
-        });
+     document.addEventListener("DOMContentLoaded", function() {
+  // Initialize the date picker
+  flatpickr("#datePicker", {
+    dateFormat: "d-m-Y", // Adjusted format for your placeholder
+    disableMobile: true, // Force consistent behavior across all devices
+  });
+
+  // Initialize the time picker
+  flatpickr("#timePicker", {
+    enableTime: true,       // Enable time selection
+    noCalendar: true,       // Disable calendar view
+    dateFormat: "H:i",      // Time format (24-hour)
+    time_24hr: true,        // Use 24-hour format
+    disableMobile: true,    // Force consistent behavior across all devices
+  });
+});
       </script>
       
 

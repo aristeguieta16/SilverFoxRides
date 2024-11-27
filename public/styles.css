@@ -661,7 +661,7 @@ form#booking-form input[type="date"]::placeholder,
 form#booking-form input[type="time"]::placeholder,
 form#booking-form input[type="number"]::placeholder,
 form#booking-form input[type="email"]::placeholder {
-    color: red;
+    color: #B0B0B0;
     font-weight: 400 !important;
     text-align: start !important;
 }
