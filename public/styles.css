@@ -1022,9 +1022,7 @@ footer {
             font-size: 16px; 
         } */
     
-        form#booking-form input[type="number"] {
-            text-align: center; /* Align text center for better readability */
-        }
+       
     
         .cta-button {
             width: 100%;

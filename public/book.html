@@ -98,10 +98,17 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <!-- <input type="date" id="pickupDate" placeholder="Pick-Up Date"> -->
-                    <input placeholder="Pick-Up Date" class="textbox-n" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="pickupDate" />
-                    <!-- <input type="time" id="pickupTime" placeholder="Pick-Up Time"> -->
-                    <input placeholder="Pick-Up Time" class="textbox-n" type="text" onfocus="(this.type='time')" onblur="(this.type='text')" id="pickupTime" />
+                    <!-- <div class="date-picker-container">
+                        <input 
+                          type="text" 
+                          id="customDatePicker" 
+                          placeholder="Select a date" 
+                        />
+                      </div> -->
+                      <input type="text" id="datePicker" placeholder="Select a date" />
+                    <!-- <input placeholder="Pick-Up Date" class="textbox-n" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="pickupDate" /> -->
+                    <input type="text" id="timePicker" placeholder="Select a time" />
+                    <!-- <input placeholder="Pick-Up Time" class="textbox-n" type="text" onfocus="(this.type='time')" onblur="(this.type='text')" id="pickupTime" /> -->
                     <input type="text" id="pickupLocation" placeholder="Pick-Up Location" />
                     <input type="text" id="dropoffLocation1" placeholder="Drop-Off Location" />
                     <input type="text" id="firstName" placeholder="First Name">
@@ -144,6 +151,29 @@
 
     <!-- Include UUID Library -->
     <script src="https://cdn.jsdelivr.net/npm/uuid@8.3.2/dist/umd/uuid.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+
+    <!-- Flatpickr JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          // Initialize the date picker
+          flatpickr("#datePicker", {
+            dateFormat: "Y-m-d", // Customize the date format
+          });
+      
+          // Initialize the time picker
+          flatpickr("#timePicker", {
+            enableTime: true,         // Enable time selection
+            noCalendar: true,         // Disable the calendar
+            dateFormat: "H:i",        // Format time as 24-hour
+            time_24hr: true,          // Use 24-hour format
+          });
+        });
+      </script>
+      
 
     <script>
 
