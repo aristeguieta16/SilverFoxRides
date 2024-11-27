@@ -162,6 +162,7 @@
           // Initialize the date picker
           flatpickr("#datePicker", {
             dateFormat: "Y-m-d", // Customize the date format
+            allowInput: true,    // Allow manual input, keeping the placeholder visible
           });
       
           // Initialize the time picker
@@ -170,6 +171,7 @@
             noCalendar: true,         // Disable the calendar
             dateFormat: "H:i",        // Format time as 24-hour
             time_24hr: true,          // Use 24-hour format
+            allowInput: true,         // Allow manual input, keeping the placeholder visible
           });
         });
       </script>
