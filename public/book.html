@@ -99,15 +99,9 @@
                 </div>
                 <div class="form-group">
                     <!-- <input type="date" id="pickupDate" placeholder="Pick-Up Date"> -->
-                    <div class="date-picker">
-                        <input type="date" id="pickupDate" required="">
-                        <span class="placeholder">Pick-Up Date</span>
-                      </div>
+                    <input placeholder="Pick-Up Date" class="textbox-n" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="pickupDate" />
                     <!-- <input type="time" id="pickupTime" placeholder="Pick-Up Time"> -->
-                    <div class="time-picker">
-                        <input type="time" id="pickupTime" required>
-                        <span class="placeholder">Pick-Up Time</span>
-                      </div>
+                    <input placeholder="Pick-Up Time" class="textbox-n" type="text" onfocus="(this.type='time')" onblur="(this.type='text')" id="pickupTime" />
                     <input type="text" id="pickupLocation" placeholder="Pick-Up Location" />
                     <input type="text" id="dropoffLocation1" placeholder="Drop-Off Location" />
                     <input type="text" id="firstName" placeholder="First Name">
@@ -351,21 +345,67 @@
             const selectedDateTime = new Date(pickupDate + ' ' + pickupTime).getTime();
             const eightHoursInMillis = 8 * 60 * 60 * 1000; // 8 hours in milliseconds
 
-            if (
-                !pickupLocation ||
-                (rideOption === "Hourly Service" && (!NoOfHour || !carType)) ||
-                (rideOption === "ONE WAY" && !dropoffLocation1) ||
-                (rideOption === "FROM AIRPORT" && (!flightNumber || !airline || !dropoffLocation1)) ||
-                (rideOption === "TO AIRPORT" && !dropoffLocation1) ||
-                (rideOption === "Chauffeur" && !NoOfHour) ||
-                !pickupDate ||
-                !pickupTime ||
-                isNaN(numPassengers) || numPassengers <= 0
-            ) {//error validation
-                warningMessage.textContent = "Please fill in all required fields.";
+            // if (
+            //     !pickupLocation ||
+            //     (rideOption === "Hourly Service" && (!NoOfHour || !carType)) ||
+            //     (rideOption === "ONE WAY" && !dropoffLocation1) ||
+            //     (rideOption === "FROM AIRPORT" && (!flightNumber || !airline || !dropoffLocation1)) ||
+            //     (rideOption === "TO AIRPORT" && !dropoffLocation1) ||
+            //     (rideOption === "Chauffeur" && !NoOfHour) ||
+            //     !pickupDate ||
+            //     !pickupTime ||
+            //     isNaN(numPassengers) || numPassengers <= 0
+            // ) {//error validation
+            //     warningMessage.textContent = "Please fill in all required fields.";
+            //     warningMessage.style.display = 'block';
+            //     return;
+            // }
+            const missingFields = [];
+
+            if (!pickupLocation) {
+                missingFields.push("Pickup location is required.");
+            }
+
+            if (rideOption === "Hourly Service") {
+                if (!NoOfHour) missingFields.push("Number of hours is required for Hourly Service.");
+                if (!carType) missingFields.push("Car type is required for Hourly Service.");
+            }
+
+            if (rideOption === "ONE WAY" && !dropoffLocation1) {
+                missingFields.push("Dropoff location is required for ONE WAY service.");
+            }
+
+            if (rideOption === "FROM AIRPORT") {
+                if (!flightNumber) missingFields.push("Flight number is required for FROM AIRPORT service.");
+                if (!airline) missingFields.push("Airline is required for FROM AIRPORT service.");
+                if (!dropoffLocation1) missingFields.push("Dropoff location is required for FROM AIRPORT service.");
+            }
+
+            if (rideOption === "TO AIRPORT" && !dropoffLocation1) {
+                missingFields.push("Dropoff location is required for TO AIRPORT service.");
+            }
+
+            if (rideOption === "Chauffeur" && !NoOfHour) {
+                missingFields.push("Number of hours is required for Chauffeur service.");
+            }
+
+            if (!pickupDate) {
+                missingFields.push("Pickup date is required.");
+            }
+            if (!pickupTime) {
+                missingFields.push("Pickup time is required.");
+            }
+
+            if (isNaN(numPassengers) || numPassengers <= 0) {
+                missingFields.push("A valid number of passengers is required.");
+            }
+
+            if (missingFields.length > 0) {
+                warningMessage.textContent = missingFields.join("\n");
                 warningMessage.style.display = 'block';
                 return;
             }
+
 
             if (numPassengers > 4 && carType == "BLUEFOX") {
                 // alert("Select SiverFox or BlackFox for bigger car option");
@@ -670,6 +710,40 @@
             console.log(`Selected time: ${selectedTime}`);
         });
     </script>
+
+<script>
+    $(document).ready(function () {
+      // Handle focus to show the date picker
+      $('#date').on('focus', function () {
+        $(this).attr('type', 'date'); // Change type to date
+      });
+  
+      // Handle blur to format the date
+      $('#date').on('blur', function () {
+        const input = $(this);
+        const value = input.val(); // Get the selected date
+  
+        if (value) {
+          // Parse and format the date
+          const date = new Date(value);
+          if (!isNaN(date)) {
+            const day = String(date.getDate()).padStart(2, '0'); // Ensure 2 digits
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+            const year = date.getFullYear(); // Get the full year
+            const formattedDate = `${day}-${month}-${year}`; // Format as dd-mm-yyyy
+  
+            input.attr('type', 'text'); // Revert to text for consistent display
+            input.val(formattedDate); // Set the formatted value
+          } else {
+            console.error('Invalid date format');
+          }
+        } else {
+          input.attr('type', 'text'); // Handle empty input gracefully
+        }
+      });
+    });
+  </script>
+    
 </body>
 
 </html>
