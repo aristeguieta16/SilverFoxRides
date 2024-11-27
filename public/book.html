@@ -101,13 +101,13 @@
                     <!-- <div class="date-picker-container">
                         <input 
                           type="text" 
-                          id="customDatePicker" 
+                          id="custompickupDate" 
                           placeholder="Select a date" 
                         />
                       </div> -->
-                      <input type="datetime-local" id="datePicker" placeholder="Select a date" readonly />
+                      <input type="datetime-local" id="pickupDate" placeholder="Select a date" readonly />
                     <!-- <input placeholder="Pick-Up Date" class="textbox-n" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="pickupDate" /> -->
-                    <input type="text" id="timePicker" placeholder="Select a time" readonly  />
+                    <input type="text" id="pickupTime" placeholder="Select a time" readonly  />
                     <!-- <input placeholder="Pick-Up Time" class="textbox-n" type="text" onfocus="(this.type='time')" onblur="(this.type='text')" id="pickupTime" /> -->
                     <input type="text" id="pickupLocation" placeholder="Pick-Up Location" />
                     <input type="text" id="dropoffLocation1" placeholder="Drop-Off Location" />
@@ -160,20 +160,20 @@
     <script>
      document.addEventListener("DOMContentLoaded", function() {
   // Initialize the date picker
-  flatpickr("#datePicker", {
+  flatpickr("#pickupDate", {
     dateFormat: "d-m-Y", // Adjusted format for your placeholder
     disableMobile: true, // Force consistent behavior across all devices
   });
 
   // Initialize the time picker
-  flatpickr("#timePicker", {
+  flatpickr("#pickupTime", {
     enableTime: true,       // Enable time selection
     noCalendar: true,       // Disable calendar view
     dateFormat: "H:i",      // Time format (24-hour)
     time_24hr: true,        // Use 24-hour format
     disableMobile: true,    // Force consistent behavior across all devices
-  });
-});
+        });
+    });
       </script>
       
 
@@ -361,8 +361,8 @@
             const pickupLocation = document.getElementById('pickupLocation')?.value;
             const dropoffLocation1 = document.getElementById('dropoffLocation1')?.value;
             const dropoffLocation2 = document.getElementById('dropoffLocation2')?.value;
-            const pickupDate = document.getElementById('pickupDate')?.value;
-            const pickupTime = document.getElementById('pickupTime')?.value;
+            let pickupDate = document.getElementById('pickupDate')?.value;
+            let pickupTime = document.getElementById('pickupTime')?.value;
             const warningMessage = document.getElementById('warning-alert');
             const rideOption = document.getElementById('rideChoiceBtn')?.textContent.trim();
             const numPassengers = parseInt(document.getElementById('numPassengers')?.value, 10);
@@ -374,7 +374,16 @@
             const todayTime = new Date().toISOString().split('T')[0];
             const today = new Date();
             const currentDateTime = today.getTime();
-            const selectedDateTime = new Date(pickupDate + ' ' + pickupTime).getTime();
+            console.log("pickupDate",pickupDate);
+            console.log("pickupTime",pickupTime);
+            const [day, month, year] = pickupDate.split("-"); // Split into day, month, and year
+            pickupDate = `${year}-${month}-${day}`; // Rearrange into "YYYY-MM-DD"
+
+            const dateTimeString = `${pickupDate} ${pickupTime}`; // "2024-11-27 18:00"
+            console.log("dateTimeString---->",dateTimeString)
+            const selectedDateTime = new Date(dateTimeString).getTime(); // Get timestamp
+
+            console.log(selectedDateTime); // Output: 1732708800000 (example value)
             const eightHoursInMillis = 8 * 60 * 60 * 1000; // 8 hours in milliseconds
 
             // if (
@@ -478,7 +487,6 @@
             //         alert("Please select a car type.");
             //         return;
             //     }
-
             //     let hourlyRate;
             //     switch (carType) {
             //         case "BLUEFOX":
@@ -500,9 +508,7 @@
             //     console.log("price is =>",price)
             //     console.log("hourlyRate is =>",hourlyRate)
             //     // createStripeCheckout(price, airline, flightNumber, NoOfHour);
-
             // }
-
              if (rideOption === "Hourly Service") {
                 console.log("carType:", carType);
                 console.log("NoOfHour:", NoOfHour);
@@ -532,7 +538,7 @@
                 }
 
                 let price = hourlyRate * NoOfHour;
-
+                createStripeCheckout(price, airline, flightNumber, NoOfHour);
 
             }else if (rideOption === "Chauffeur") {
                 let price = 50 * NoOfHour;
