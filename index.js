@@ -111,7 +111,6 @@ app.post('/api/payment-confirmation', bodyParser.raw({ type: 'application/json' 
             const session = event.data.object;
             let {amount_total, payment_intent, payment_status} = session
             const reservationDetails = JSON.parse(session.metadata.reservationDetails);
-
             // Send notifications here (email/SMS)
             console.log('Payment successful!', reservationDetails);
             res1 = await sendEmailNotification({...reservationDetails, amount_total, payment_intent, payment_status });
@@ -192,65 +191,105 @@ async function contactUs({
 }
 
 // Function to send email notifications
+// async function sendEmailNotification(reservationDetails) {
+//     //     const mailOptions = {
+//     //         from: process.env.EMAIL_USER,
+//     //         to: process.env.NOTIFICATION_EMAIL,
+//     //         subject: 'New SilverFox Reservation!!',
+//     //         text: `Reservation Details:
+//     // First Name: ${reservationDetails.customerFirstName}
+//     // Last Name: ${reservationDetails.customerLastName}
+//     // Phone Number: ${reservationDetails.customerPhoneNumber}
+//     // Pickup Location: ${reservationDetails.pickupLocation}
+//     // Dropoff Location: ${reservationDetails.dropoffLocation}
+//     // Pickup Date: ${reservationDetails.pickupDate}
+//     // Pickup Time: ${reservationDetails.pickupTime}
+//     // Customer Email: ${reservationDetails.customerEmail}`,
+//     //     };
+
+//     //     transporter.sendMail(mailOptions, (error, info) => {
+//     //         if (error) {
+//     //             console.error('Error sending email:', error); // Log detailed error
+//     //         } else {
+//     //             console.log('Email sent:', info.response); // Log the success response
+//     //         }
+//     //     });
+//     // let defaultClient = brevo.ApiClient.instance;
+
+//     // let apiKey = defaultClient.authentications['apiKey'];
+//     // apiKey.apiKey = process.env.BREVO_API_KEY;
+
+//     let apiInstance = new brevo.TransactionalEmailsApi();
+//     let apiKey = apiInstance.authentications['apiKey'];
+//     apiKey.apiKey = process.env.BREVO_API_KEY;
+//     let sendSmtpEmail = new brevo.SendSmtpEmail();
+//     sendSmtpEmail.subject = "New SilverFox Reservation!!";
+//     sendSmtpEmail.htmlContent = `Reservation Details:<br/>
+//     First Name: ${reservationDetails.customerFirstName}<br/>
+//     Last Name: ${reservationDetails.customerLastName}<br/>
+//     Phone Number: ${reservationDetails.customerPhoneNumber}<br/>
+//     Pickup Location: ${reservationDetails.pickupLocation}<br/>
+//     Dropoff Location: ${reservationDetails.dropoffLocation}<br/>
+//     ${!!reservationDetails.dropoffLocation2 ? 'Next dropoff location for round trip: '+ reservationDetails.dropoffLocation2 + '<br/>' : ''}
+//     Pickup Date: ${reservationDetails.pickupDate}<br/>
+//     Pickup Time: ${reservationDetails.pickupTime}<br/>
+//     Customer Email: ${reservationDetails.customerEmail}<br/>
+//     Number of passengers: ${reservationDetails.numPassengers}<br/>
+//     Ride Option: ${reservationDetails.rideOption}<br/>
+//     Car Choice: ${reservationDetails.carChoice}<br/>
+//     Flight Number: ${reservationDetails.flightNumber}<br/>
+//     ${!!reservationDetails.flightNumber ? 'Flight Number: '+ reservationDetails.flightNumber + '<br/>' : ''}
+//     Amount total: ${(reservationDetails.amount_total / 100)}<br/>
+//     Stripe payment intent id: ${reservationDetails.payment_intent}<br/>
+//     Stripe payment status: ${reservationDetails.payment_status}<br/>`;
+//     sendSmtpEmail.sender = { "name": "Josepabon", "email": process.env.EMAIL_USER };
+//     sendSmtpEmail.to = [
+//     { "email": process.env.NOTIFICATION_EMAIL, "name": reservationDetails.customerFirstName }
+//     ];
+
+//     const data = await apiInstance.sendTransacEmail(sendSmtpEmail)
+//     console.log('API called successfully. Returned data: ' + JSON.stringify(data));
+//     return data;
+// }
 async function sendEmailNotification(reservationDetails) {
-    //     const mailOptions = {
-    //         from: process.env.EMAIL_USER,
-    //         to: process.env.NOTIFICATION_EMAIL,
-    //         subject: 'New SilverFox Reservation!!',
-    //         text: `Reservation Details:
-    // First Name: ${reservationDetails.customerFirstName}
-    // Last Name: ${reservationDetails.customerLastName}
-    // Phone Number: ${reservationDetails.customerPhoneNumber}
-    // Pickup Location: ${reservationDetails.pickupLocation}
-    // Dropoff Location: ${reservationDetails.dropoffLocation}
-    // Pickup Date: ${reservationDetails.pickupDate}
-    // Pickup Time: ${reservationDetails.pickupTime}
-    // Customer Email: ${reservationDetails.customerEmail}`,
-    //     };
-
-    //     transporter.sendMail(mailOptions, (error, info) => {
-    //         if (error) {
-    //             console.error('Error sending email:', error); // Log detailed error
-    //         } else {
-    //             console.log('Email sent:', info.response); // Log the success response
-    //         }
-    //     });
-    // let defaultClient = brevo.ApiClient.instance;
-
-    // let apiKey = defaultClient.authentications['apiKey'];
-    // apiKey.apiKey = process.env.BREVO_API_KEY;
-
     let apiInstance = new brevo.TransactionalEmailsApi();
     let apiKey = apiInstance.authentications['apiKey'];
     apiKey.apiKey = process.env.BREVO_API_KEY;
-    let sendSmtpEmail = new brevo.SendSmtpEmail();
 
+    let sendSmtpEmail = new brevo.SendSmtpEmail();
     sendSmtpEmail.subject = "New SilverFox Reservation!!";
-    sendSmtpEmail.htmlContent = `Reservation Details:<br/>
-    First Name: ${reservationDetails.customerFirstName}<br/>
-    Last Name: ${reservationDetails.customerLastName}<br/>
-    Phone Number: ${reservationDetails.customerPhoneNumber}<br/>
-    Pickup Location: ${reservationDetails.pickupLocation}<br/>
-    Dropoff Location: ${reservationDetails.dropoffLocation}<br/>
-    ${!!reservationDetails.dropoffLocation2 ? 'Next dropoff location for round trip: '+ reservationDetails.dropoffLocation2 + '<br/>' : ''}
-    Pickup Date: ${reservationDetails.pickupDate}<br/>
-    Pickup Time: ${reservationDetails.pickupTime}<br/>
-    Customer Email: ${reservationDetails.customerEmail}<br/>
-    Number of passengers: ${reservationDetails.numPassengers}<br/>
-    Ride choice: ${reservationDetails.rideChoice}<br/>
-    ${!!reservationDetails.flightNumber ? 'Flight Number: '+ reservationDetails.flightNumber + '<br/>' : ''}
-    Amount total: ${(reservationDetails.amount_total / 100)}<br/>
-    Stripe payment intent id: ${reservationDetails.payment_intent}<br/>
-    Stripe payment status: ${reservationDetails.payment_status}<br/>`;
+
+    // Dynamically build the email content based on available fields
+    let htmlContent = "Reservation Details:<br/>";
+    if (reservationDetails.customerFirstName) htmlContent += `First Name: ${reservationDetails.customerFirstName}<br/>`;
+    if (reservationDetails.customerLastName) htmlContent += `Last Name: ${reservationDetails.customerLastName}<br/>`;
+    if (reservationDetails.customerPhoneNumber) htmlContent += `Phone Number: ${reservationDetails.customerPhoneNumber}<br/>`;
+    if (reservationDetails.pickupLocation) htmlContent += `Pickup Location: ${reservationDetails.pickupLocation}<br/>`;
+    if (reservationDetails.dropoffLocation) htmlContent += `Dropoff Location: ${reservationDetails.dropoffLocation}<br/>`;
+    if (reservationDetails.dropoffLocation2) htmlContent += `Next dropoff location for round trip: ${reservationDetails.dropoffLocation2}<br/>`;
+    if (reservationDetails.pickupDate) htmlContent += `Pickup Date: ${reservationDetails.pickupDate}<br/>`;
+    if (reservationDetails.pickupTime) htmlContent += `Pickup Time: ${reservationDetails.pickupTime}<br/>`;
+    if (reservationDetails.customerEmail) htmlContent += `Customer Email: ${reservationDetails.customerEmail}<br/>`;
+    if (reservationDetails.numPassengers) htmlContent += `Number of passengers: ${reservationDetails.numPassengers}<br/>`;
+    if (reservationDetails.rideOption) htmlContent += `Ride Option: ${reservationDetails.rideOption}<br/>`;
+    if (reservationDetails.airline) htmlContent += `Airline: ${reservationDetails.airline}<br/>`;
+    if (reservationDetails.carChoice) htmlContent += `Car Choice: ${reservationDetails.carChoice}<br/>`;
+    if (reservationDetails.flightNumber) htmlContent += `Flight Number: ${reservationDetails.flightNumber}<br/>`;
+    if (reservationDetails.amount_total) htmlContent += `Amount total: ${(reservationDetails.amount_total / 100)}<br/>`;
+    if (reservationDetails.payment_intent) htmlContent += `Stripe payment intent id: ${reservationDetails.payment_intent}<br/>`;
+    if (reservationDetails.payment_status) htmlContent += `Stripe payment status: ${reservationDetails.payment_status}<br/>`;
+
+    sendSmtpEmail.htmlContent = htmlContent;
     sendSmtpEmail.sender = { "name": "Josepabon", "email": process.env.EMAIL_USER };
     sendSmtpEmail.to = [
-    { "email": process.env.NOTIFICATION_EMAIL, "name": reservationDetails.customerFirstName }
+        { "email": process.env.NOTIFICATION_EMAIL, "name": reservationDetails.customerFirstName || "Customer" }
     ];
 
-    const data = await apiInstance.sendTransacEmail(sendSmtpEmail)
+    const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
     console.log('API called successfully. Returned data: ' + JSON.stringify(data));
     return data;
 }
+
 
 // Initialize Vonage client
 const vonage = new Vonage({

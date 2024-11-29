@@ -248,7 +248,7 @@
                 document.getElementById('rideChoiceBtn').textContent = "TO AIRPORT";
                 carTypeDiv.style.display = 'block'; // Hide by default for to-airport
                 dropoffLocation1Input.style.display = 'block';
-                flightDetailsContainer.style.display = 'none';
+                flightDetailsContainer.style.display = 'flex';
                 serviceHoursInput.style.display = 'none';
                 document.getElementById('rideChoiceDropdown').classList.remove('show');
             });
@@ -423,6 +423,8 @@
             }
 
             if (rideOption === "TO AIRPORT" && !dropoffLocation1) {
+                if (!flightNumber) missingFields.push("Flight number is required for FROM AIRPORT service.");
+                if (!airline) missingFields.push("Airline is required for FROM AIRPORT service.");
                 missingFields.push("Dropoff location is required for TO AIRPORT service.");
             }
 
@@ -582,12 +584,17 @@
                 customerPhoneNumber: document.getElementById('phoneNumber').value,
                 customerEmail: document.getElementById('email').value,
                 rideOption: rideOption,
+                carChoice: document.getElementById('carType')?.textContent,
                 numPassengers: document.getElementById('numPassengers').value,
                 ...(rideOption === 'Hourly Service' && {
                     carType: document.getElementById('carType').textContent,
                     serviceHours: document.getElementById('serviceHours').value
                 }),
                 ...(rideOption === 'FROM AIRPORT' && {
+                    airline: airline, // Add airline details for airport pickup
+                    flightNumber: flightNumber // Add flight number details
+                }),
+                ...(rideOption === 'TO AIRPORT' && {
                     airline: airline, // Add airline details for airport pickup
                     flightNumber: flightNumber // Add flight number details
                 }),
