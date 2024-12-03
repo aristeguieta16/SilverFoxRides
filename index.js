@@ -79,6 +79,8 @@ app.post('/api/create-checkout', async (req, res) => {
               quantity: 1,
           }],
           mode: 'payment',
+          //   success_url: 'http://localhost:3000/thank-you.html',
+          //   cancel_url: 'http://localhost:3000/book.html',
           success_url: 'https://www.silverfoxrides.com/thank-you.html',
           cancel_url: 'https://www.silverfoxrides.com/book.html',
           metadata: {
@@ -99,22 +101,22 @@ app.post('/api/create-checkout', async (req, res) => {
 // Stripe webhook to handle payment confirmations
 app.post('/api/payment-confirmation', bodyParser.raw({ type: 'application/json' }), async (req, res) => {
     const sig = req.headers['stripe-signature'];
-    console.log('Received Stripe Signature:', sig); // Log the signature for debugging
-    console.log("Req",req,  req.rawBody)
+    // console.log('Received Stripe Signature:', sig); // Log the signature for debugging
+    // console.log("Req",req,  req.rawBody)
     let res1 = '';
     let res2 = '';
     try {
         const event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
-        console.log('Constructed Event:', event); // Log the event details for debugging
+        // console.log('Constructed Event:', event); // Log the event details for debugging
         
         if (event.type === 'checkout.session.completed') {
             const session = event.data.object;
             let {amount_total, payment_intent, payment_status} = session
             const reservationDetails = JSON.parse(session.metadata.reservationDetails);
             // Send notifications here (email/SMS)
-            console.log('Payment successful!', reservationDetails);
+            // console.log('Payment successful!', reservationDetails);
             res1 = await sendEmailNotification({...reservationDetails, amount_total, payment_intent, payment_status });
-            res2 = await sendSMSNotification(reservationDetails);
+            // res2 = await sendSMSNotification(reservationDetails);
         }
 
         res.status(200).send({ received: true, res1, res2 });
@@ -186,7 +188,7 @@ async function contactUs({
     ];
 
     const data = await apiInstance.sendTransacEmail(sendSmtpEmail)
-    console.log('API called successfully. Returned data: ' + JSON.stringify(data));
+    // console.log('API called successfully. Returned data: ' + JSON.stringify(data));
     return data;
 }
 
@@ -286,7 +288,7 @@ async function sendEmailNotification(reservationDetails) {
     ];
 
     const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
-    console.log('API called successfully. Returned data: ' + JSON.stringify(data));
+    // console.log('API called successfully. Returned data: ' + JSON.stringify(data));
     return data;
 }
 
@@ -308,7 +310,7 @@ function sendSMSNotification(reservationDetails) {
             console.error('Error sending SMS:', err);
         } else {
             if (responseData.messages[0].status === "0") {
-                console.log('SMS sent successfully:', responseData);
+                // console.log('SMS sent successfully:', responseData);
             } else {
                 console.error('Failed to send SMS:', responseData.messages[0]['error-text']);
             }

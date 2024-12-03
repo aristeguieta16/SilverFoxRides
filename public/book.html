@@ -374,16 +374,12 @@
             const todayTime = new Date().toISOString().split('T')[0];
             const today = new Date();
             const currentDateTime = today.getTime();
-            console.log("pickupDate",pickupDate);
-            console.log("pickupTime",pickupTime);
             const [day, month, year] = pickupDate.split("-"); // Split into day, month, and year
             pickupDate = `${year}-${month}-${day}`; // Rearrange into "YYYY-MM-DD"
 
             const dateTimeString = `${pickupDate} ${pickupTime}`; // "2024-11-27 18:00"
-            console.log("dateTimeString---->",dateTimeString)
             const selectedDateTime = new Date(dateTimeString).getTime(); // Get timestamp
 
-            console.log(selectedDateTime); // Output: 1732708800000 (example value)
             const eightHoursInMillis = 8 * 60 * 60 * 1000; // 8 hours in milliseconds
 
             // if (
@@ -540,10 +536,13 @@
                 }
 
                 let price = hourlyRate * NoOfHour;
+                // console.log("Hourly Price",price)
                 createStripeCheckout(price, airline, flightNumber, NoOfHour);
 
             }else if (rideOption === "Chauffeur") {
                 let price = 50 * NoOfHour;
+                // console.log("Chauffeur Price",price)
+                
                 createStripeCheckout(price, airline, flightNumber, NoOfHour);
             } else if (carType == "CAR TYPE" || carType == "") {
                     alert("Please select a car type.");
@@ -572,7 +571,14 @@
         }
 
         function createStripeCheckout(price, airline, flightNumber, NoOfHour) {
-            console.log("Starting Stripe Checkout with price:", price, "NoOfHour", NoOfHour);
+            const warningMessage = document.getElementById('warning-alert');
+            if (price === 0) {
+                warningMessage.innerHTML = "The Booking Amount is zero. Please recheck your booking details or contact us directly at <a href='tel:+15129159962'>+1 512 915-9962</a> or email <a href='mailto:josepabon@silverfoxrides.com'>josepabon@silverfoxrides.com</a>. Thank You!";
+                warningMessage.style.display = 'block';
+                // alert('The price is zero. Please recheck your booking details or contact the admin for assistance.');
+                return;
+            }
+            // console.log("Starting Stripe Checkout with price:", price, "NoOfHour", NoOfHour);
             const rideOption = document.getElementById('rideChoiceBtn').textContent.trim();
             const reservationDetails = {
                 pickupLocation: document.getElementById('pickupLocation').value,
@@ -665,30 +671,30 @@
             // Define the price map for different car types
             let priceMap = {
                 "bluefox": [
-                    { distanceGreaterEqual: 0, distanceLessEqual: 7, price: 6.5 },
-                    { distanceGreaterEqual: 7.1, distanceLessEqual: 10, price: 6 },
-                    { distanceGreaterEqual: 10.1, distanceLessEqual: 12, price: 5 },
-                    { distanceGreaterEqual: 12.1, distanceLessEqual: 18, price: 4 },
-                    { distanceGreaterEqual: 18.1, distanceLessEqual: 23, price: 3.5 },
-                    { distanceGreaterEqual: 23.1, distanceLessEqual: 34, price: 3 },
+                    { distanceGreaterEqual: 0, distanceLessEqual: 7.1, price: 6.5 },
+                    { distanceGreaterEqual: 7.1, distanceLessEqual: 10.1, price: 6 },
+                    { distanceGreaterEqual: 10.1, distanceLessEqual: 12.1, price: 5 },
+                    { distanceGreaterEqual: 12.1, distanceLessEqual: 18.1, price: 4 },
+                    { distanceGreaterEqual: 18.1, distanceLessEqual: 23.1, price: 3.5 },
+                    { distanceGreaterEqual: 23.1, distanceLessEqual: 34.1, price: 3 },
                     { distanceGreaterEqual: 34.1, price: 2.5 }
                 ],
                 "silverfox": [
-                    { distanceGreaterEqual: 0, distanceLessEqual: 7, price: 7.5 },
-                    { distanceGreaterEqual: 7.1, distanceLessEqual: 10, price: 7 },
-                    { distanceGreaterEqual: 10.1, distanceLessEqual: 12, price: 6 },
-                    { distanceGreaterEqual: 12.1, distanceLessEqual: 18, price: 4.5 },
-                    { distanceGreaterEqual: 18.1, distanceLessEqual: 23, price: 4 },
-                    { distanceGreaterEqual: 23.1, distanceLessEqual: 34, price: 3.5 },
+                    { distanceGreaterEqual: 0, distanceLessEqual: 7.1, price: 7.5 },
+                    { distanceGreaterEqual: 7.1, distanceLessEqual: 10.1, price: 7 },
+                    { distanceGreaterEqual: 10.1, distanceLessEqual: 12.1, price: 6 },
+                    { distanceGreaterEqual: 12.1, distanceLessEqual: 18.1, price: 4.5 },
+                    { distanceGreaterEqual: 18.1, distanceLessEqual: 23.1, price: 4 },
+                    { distanceGreaterEqual: 23.1, distanceLessEqual: 34.1, price: 3.5 },
                     { distanceGreaterEqual: 34.1, price: 3 }
                 ],
                 "blackfox": [
-                    { distanceGreaterEqual: 0, distanceLessEqual: 7, price: 8.5 },
-                    { distanceGreaterEqual: 7.1, distanceLessEqual: 10, price: 8 },
-                    { distanceGreaterEqual: 10.1, distanceLessEqual: 12, price: 7 },
-                    { distanceGreaterEqual: 12.1, distanceLessEqual: 18, price: 5 },
-                    { distanceGreaterEqual: 18.1, distanceLessEqual: 23, price: 4.5 },
-                    { distanceGreaterEqual: 23.1, distanceLessEqual: 34, price: 4 },
+                    { distanceGreaterEqual: 0, distanceLessEqual: 7.1, price: 8.5 },
+                    { distanceGreaterEqual: 7.1, distanceLessEqual: 10.1, price: 8 },
+                    { distanceGreaterEqual: 10.1, distanceLessEqual: 12.1, price: 7 },
+                    { distanceGreaterEqual: 12.1, distanceLessEqual: 18.1, price: 5 },
+                    { distanceGreaterEqual: 18.1, distanceLessEqual: 23.1, price: 4.5 },
+                    { distanceGreaterEqual: 23.1, distanceLessEqual: 34.1, price: 4 },
                     { distanceGreaterEqual: 34.1, price: 3.5 }
                 ]
             };
@@ -714,7 +720,6 @@
                 console.error("Invalid carType:", carType); // If carType doesn't exist in priceMap
             }
 
-            console.log("Final unitPrice:", unitPrice); // Log the final unitPrice
             return unitPrice;
         }
         function calculatePrice(totalDistance, type, carType) {
@@ -747,12 +752,10 @@
 
         pickupDateInput.addEventListener('change', (e) => {
             const selectedDate = e.target.value;
-            console.log(`Selected date: ${selectedDate}`);
         });
 
         pickupTimeInput.addEventListener('change', (e) => {
             const selectedTime = e.target.value;
-            console.log(`Selected time: ${selectedTime}`);
         });
     </script>
 
